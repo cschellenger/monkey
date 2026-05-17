@@ -35,7 +35,7 @@ type Number interface {
 	Add(Number) Number
 	Subtract(Number) Number
 	Multiply(Number) Number
-	Divide(Number) Number
+	Divide(Number) (Number, *Error)
 	CompareTo(Number) CompareResult
 }
 
@@ -80,19 +80,19 @@ func (i *Integer) Multiply(other Number) Number {
 	return &Integer{Value: i.Value * other.IntValue()}
 }
 
-func (i *Integer) Divide(other Number) Number {
+func (i *Integer) Divide(other Number) (Number, *Error) {
 	if other.Type() == FLOAT_OBJ {
 		otherFloat := other.(*Float)
 		if otherFloat.Value == 0.0 {
-			return &Error{Message: "division by zero"}
+			return nil, &Error{Message: "division by zero"}
 		}
-		return &Float{Value: i.FloatValue() / otherFloat.Value}
+		return &Float{Value: i.FloatValue() / otherFloat.Value}, nil
 	}
 	otherInt := other.(*Integer)
 	if otherInt.Value == 0 {
-		return &Error{Message: "division by zero"}
+		return nil, &Error{Message: "division by zero"}
 	}
-	return &Integer{Value: i.Value / otherInt.Value}
+	return &Integer{Value: i.Value / otherInt.Value}, nil
 }
 
 func (i *Integer) CompareTo(other Number) CompareResult {
@@ -138,16 +138,16 @@ func (f *Float) Multiply(other Number) Number {
 	return &Float{Value: f.Value * other.FloatValue()}
 }
 
-func (f *Float) Divide(other Number) Number {
+func (f *Float) Divide(other Number) (Number, *Error) {
 	if other.Type() == FLOAT_OBJ {
 		otherFloat := other.(*Float)
 		if otherFloat.Value == 0.0 {
-			return &Error{Message: "division by zero"}
+			return nil, &Error{Message: "division by zero"}
 		}
-		return &Float{Value: f.Value / otherFloat.Value}
+		return &Float{Value: f.Value / otherFloat.Value}, nil
 	}
 	// Convert integer divisor to float and perform division
-	return &Float{Value: f.Value / float64(other.(*Integer).Value)}
+	return &Float{Value: f.Value / float64(other.(*Integer).Value)}, nil
 }
 
 func (f *Float) CompareTo(other Number) CompareResult {

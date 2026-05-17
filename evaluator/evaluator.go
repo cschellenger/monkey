@@ -192,7 +192,11 @@ func evalNumericOperator(operator string, leftVal, rightVal object.Number) objec
 	case "*":
 		return leftVal.Multiply(rightVal)
 	case "/":
-		return leftVal.Divide(rightVal)
+		divRes, err := leftVal.Divide(rightVal)
+		if err != nil {
+			return err
+		}
+		return divRes
 	case ">":
 		return nativeBoolToBooleanObject(leftVal.CompareTo(rightVal) == object.GREATER_THAN)
 	case ">=":

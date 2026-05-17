@@ -198,6 +198,10 @@ func TestErrorHandling(t *testing.T) {
 		expectedMessage string
 	}{
 		{
+			"1 / 0",
+			"division by zero",
+		},
+		{
 			"5 + true;",
 			"type mismatch: INTEGER + BOOLEAN",
 		},
