@@ -13,7 +13,6 @@ Monkey is a custom, interpreted programming language implemented in Go. It utili
 *   **`main.go` / `repl/`**: Entry point and interactive console.
 
 ## 🐛 Known Issues & Future Work
-*   **FIXED (Recent):** Division by zero is now handled gracefully by returning an `Error` object in `object/object.go`.
 *   **Major Feature Gap:** The language lacks support for `while` and `for` loops.
 *   **Major Feature Gap:** Missing dedicated variable assignment operator (`=`) for modifying existing variables.
 *   **Lexer Improvement:** Needs robust handling for unterminated string literals.
