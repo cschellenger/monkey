@@ -243,13 +243,50 @@ func evalInfixExpression(
 	left, right object.Object,
 ) object.Object {
 	switch {
-	case (left.Type() == object.INTEGER_OBJ || left.Type() == object.FLOAT_OBJ) &&
-		(right.Type() == object.INTEGER_OBJ || right.Type() == object.FLOAT_OBJ):
-		return evalNumericInfixExpression(operator, left, right)
+	case operator == "+":
+		leftPlus, ok := left.(object.OperatorPlus)
+		if ok {
+			return errOrResult(leftPlus.Plus(right))
+		}
+		return object.UnsupportedOperation(left.Type(), operator, right.Type())
+	case operator == "-":
+		leftMinus, ok := left.(object.OperatorMinus)
+		if ok {
+			return errOrResult(leftMinus.Minus(right))
+		}
+		return object.UnsupportedOperation(left.Type(), operator, right.Type())
+	case operator == "*":
+		leftStar, ok := left.(object.OperatorStar)
+		if ok {
+			return errOrResult(leftStar.Star(right))
+		}
+		return object.UnsupportedOperation(left.Type(), operator, right.Type())
+	case operator == "/":
+		leftSlash, ok := left.(object.OperatorSlash)
+		if ok {
+			return errOrResult(leftSlash.Slash(right))
+		}
+		return object.UnsupportedOperation(left.Type(), operator, right.Type())
 	case operator == "==":
-		return nativeBoolToBooleanObject(left == right || left.Equals(right))
+		leftEquals, ok := left.(object.OperatorEquals)
+		if ok {
+			return nativeBoolToBooleanObject(left == right || leftEquals.Equals(right))
+		}
+		return nativeBoolToBooleanObject(left == right)
 	case operator == "!=":
-		return nativeBoolToBooleanObject(left != right && !left.Equals(right))
+		leftEquals, ok := left.(object.OperatorEquals)
+		if ok {
+			return nativeBoolToBooleanObject(left != right && !leftEquals.Equals(right))
+		}
+		return nativeBoolToBooleanObject(left != right)
+	case operator == ">=":
+		return evalComparable(left, right, operator, compareGreaterEquals)
+	case operator == ">":
+		return evalComparable(left, right, operator, compareGreater)
+	case operator == "<=":
+		return evalComparable(left, right, operator, compareLessEquals)
+	case operator == "<":
+		return evalComparable(left, right, operator, compareLess)
 	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
 		return evalStringInfixExpression(operator, left, right)
 	case left.Type() != right.Type():
@@ -259,6 +296,38 @@ func evalInfixExpression(
 		return newError("unknown operator: %s %s %s",
 			left.Type(), operator, right.Type())
 	}
+}
+
+func compareGreater(cmp object.CompareResult) bool {
+	return cmp == object.GREATER_THAN
+}
+
+func compareGreaterEquals(cmp object.CompareResult) bool {
+	return cmp == object.EQUAL || cmp == object.GREATER_THAN
+}
+
+func compareLess(cmp object.CompareResult) bool {
+	return cmp == object.LESS_THAN
+}
+
+func compareLessEquals(cmp object.CompareResult) bool {
+	return cmp == object.EQUAL || cmp == object.LESS_THAN
+}
+
+func evalComparable(
+	left, right object.Object,
+	operator string,
+	comparison func(cmp object.CompareResult) bool,
+) object.Object {
+	leftComparable, ok := left.(object.Comparable)
+	if ok {
+		result, err := leftComparable.CompareTo(right)
+		if err != nil {
+			return err
+		}
+		return nativeBoolToBooleanObject(comparison(result))
+	}
+	return object.UnsupportedOperation(left.Type(), operator, right.Type())
 }
 
 func evalStringInfixExpression(
@@ -272,50 +341,6 @@ func evalStringInfixExpression(
 	leftVal := left.(*object.String).Value
 	rightVal := right.(*object.String).Value
 	return &object.String{Value: leftVal + rightVal}
-}
-
-func evalNumericInfixExpression(
-	operator string,
-	left, right object.Object,
-) object.Object {
-	leftVal := left.(object.Number)
-	rightVal := right.(object.Number)
-	return evalNumericOperator(operator, leftVal, rightVal)
-}
-
-func evalNumericOperator(operator string, leftVal, rightVal object.Number) object.Object {
-	switch operator {
-	case "+":
-		return leftVal.Add(rightVal)
-	case "-":
-		return leftVal.Subtract(rightVal)
-	case "*":
-		return leftVal.Multiply(rightVal)
-	case "/":
-		divRes, err := leftVal.Divide(rightVal)
-		if err != nil {
-			return err
-		}
-		return divRes
-	case ">":
-		return nativeBoolToBooleanObject(leftVal.CompareTo(rightVal) == object.GREATER_THAN)
-	case ">=":
-		cmp := leftVal.CompareTo(rightVal)
-		return nativeBoolToBooleanObject(cmp == object.GREATER_THAN || cmp == object.EQUAL)
-	case "<":
-		return nativeBoolToBooleanObject(leftVal.CompareTo(rightVal) == object.LESS_THAN)
-	case "<=":
-		cmp := leftVal.CompareTo(rightVal)
-		return nativeBoolToBooleanObject(cmp == object.LESS_THAN || cmp == object.EQUAL)
-	case "==":
-		return nativeBoolToBooleanObject(leftVal.CompareTo(rightVal) == object.EQUAL)
-	case "!=":
-		return nativeBoolToBooleanObject(leftVal.CompareTo(rightVal) != object.EQUAL)
-
-	default:
-		return newError("unknown operator: %s %s %s",
-			leftVal.Type(), operator, rightVal.Type())
-	}
 }
 
 func evalWhileLoop(wl *ast.WhileLoop, env *object.Environment) object.Object {
@@ -375,4 +400,14 @@ func isError(obj object.Object) bool {
 		return obj.Type() == object.ERROR_OBJ
 	}
 	return false
+}
+
+func errOrResult(res object.Object, err *object.Error) object.Object {
+	if err != nil {
+		return err
+	}
+	if res != nil {
+		return res
+	}
+	return NULL
 }

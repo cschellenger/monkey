@@ -98,19 +98,19 @@ func TestEvalBooleanExpression(t *testing.T) {
 
 	for _, tt := range tests {
 		evaluated := testEval(tt.input)
-		testBooleanObject(t, evaluated, tt.expected)
+		testBooleanObject(t, evaluated, tt.expected, tt.input)
 	}
 }
 
-func testBooleanObject(t *testing.T, obj object.Object, expected bool) bool {
+func testBooleanObject(t *testing.T, obj object.Object, expected bool, input string) bool {
 	result, ok := obj.(*object.Boolean)
 	if !ok {
-		t.Errorf("object is not Boolean. got=%T (%+v)", obj, obj)
+		t.Errorf("object is not Boolean. got=%T (%+v), '%s'", obj, obj, input)
 		return false
 	}
 	if result.Value != expected {
-		t.Errorf("object has wrong value. got=%t, want=%t",
-			result.Value, expected)
+		t.Errorf("object has wrong value. got=%t, want=%t, '%s'",
+			result.Value, expected, input)
 		return false
 	}
 	return true
@@ -131,7 +131,7 @@ func TestBangOperator(t *testing.T) {
 
 	for _, tt := range tests {
 		evaluated := testEval(tt.input)
-		testBooleanObject(t, evaluated, tt.expected)
+		testBooleanObject(t, evaluated, tt.expected, tt.input)
 	}
 }
 
@@ -223,11 +223,11 @@ func TestErrorHandling(t *testing.T) {
 		},
 		{
 			"5 + true;",
-			"type mismatch: INTEGER + BOOLEAN",
+			"Unsupported operation: INTEGER + BOOLEAN",
 		},
 		{
 			"5 + true; 5;",
-			"type mismatch: INTEGER + BOOLEAN",
+			"Unsupported operation: INTEGER + BOOLEAN",
 		},
 		{
 			"-true",
@@ -235,15 +235,15 @@ func TestErrorHandling(t *testing.T) {
 		},
 		{
 			"true + false;",
-			"unknown operator: BOOLEAN + BOOLEAN",
+			"Unsupported operation: BOOLEAN + BOOLEAN",
 		},
 		{
 			"5; true + false; 5",
-			"unknown operator: BOOLEAN + BOOLEAN",
+			"Unsupported operation: BOOLEAN + BOOLEAN",
 		},
 		{
 			"if (10 > 1) { true + false; }",
-			"unknown operator: BOOLEAN + BOOLEAN",
+			"Unsupported operation: BOOLEAN + BOOLEAN",
 		},
 		{
 			`
@@ -255,7 +255,7 @@ if (10 > 1) {
   return 1;
 }
 `,
-			"unknown operator: BOOLEAN + BOOLEAN",
+			"Unsupported operation: BOOLEAN + BOOLEAN",
 		},
 		{
 			"foobar",
@@ -263,7 +263,7 @@ if (10 > 1) {
 		},
 		{
 			`"Hello" - "World"`,
-			"unknown operator: STRING - STRING",
+			"Unsupported operation: STRING - STRING",
 		},
 	}
 

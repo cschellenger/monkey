@@ -32,18 +32,52 @@ const (
 type Object interface {
 	Type() ObjectType
 	Inspect() string
+}
+
+type OperatorEquals interface {
+	// Equality
 	Equals(Object) bool
+}
+
+type OperatorPlus interface {
+	// Usually "add"
+	Plus(Object) (Object, *Error)
+}
+
+type OperatorMinus interface {
+	// Usually "subtract"
+	Minus(Object) (Object, *Error)
+}
+
+type OperatorStar interface {
+	// Usually "multiply"
+	Star(Object) (Object, *Error)
+}
+
+type OperatorSlash interface {
+	// Usually "divide"
+	Slash(Object) (Object, *Error)
+}
+
+type Comparable interface {
+	CompareTo(Object) (CompareResult, *Error)
 }
 
 type Number interface {
 	Object
+	OperatorEquals
+	OperatorPlus
+	OperatorMinus
+	OperatorStar
+	OperatorSlash
+	Comparable
+
 	IntValue() int64
 	FloatValue() float64
 	Add(Number) Number
 	Subtract(Number) Number
 	Multiply(Number) Number
 	Divide(Number) (Number, *Error)
-	CompareTo(Number) CompareResult
 }
 
 type Integer struct {
@@ -64,6 +98,38 @@ func (i *Integer) IntValue() int64 {
 
 func (i *Integer) FloatValue() float64 {
 	return float64(i.Value)
+}
+
+func (i *Integer) Plus(other Object) (Object, *Error) {
+	otherNum, ok := other.(Number)
+	if ok {
+		return i.Add(otherNum), nil
+	}
+	return nil, UnsupportedOperation(i.Type(), "+", other.Type())
+}
+
+func (i *Integer) Minus(other Object) (Object, *Error) {
+	otherNum, ok := other.(Number)
+	if ok {
+		return i.Subtract(otherNum), nil
+	}
+	return nil, UnsupportedOperation(i.Type(), "-", other.Type())
+}
+
+func (i *Integer) Star(other Object) (Object, *Error) {
+	otherNum, ok := other.(Number)
+	if ok {
+		return i.Multiply(otherNum), nil
+	}
+	return nil, UnsupportedOperation(i.Type(), "*", other.Type())
+}
+
+func (i *Integer) Slash(other Object) (Object, *Error) {
+	otherNum, ok := other.(Number)
+	if ok {
+		return i.Divide(otherNum)
+	}
+	return nil, UnsupportedOperation(i.Type(), "/", other.Type())
 }
 
 func (i *Integer) Add(other Number) Number {
@@ -102,15 +168,20 @@ func (i *Integer) Divide(other Number) (Number, *Error) {
 	return &Integer{Value: i.Value / otherInt.Value}, nil
 }
 
-func (i *Integer) CompareTo(other Number) CompareResult {
-	return compare(i, other)
+func (i *Integer) CompareTo(other Object) (CompareResult, *Error) {
+	otherNum, ok := other.(Number)
+	if ok {
+		return compare(i, otherNum), nil
+	}
+	return EQUAL, UnsupportedOperation(i.Type(), "CompareTo", other.Type())
 }
 
 func (i *Integer) Equals(other Object) bool {
-	if other.Type() == INTEGER_OBJ {
-		return i.Value == other.(*Integer).Value
+	cmp, err := i.CompareTo(other)
+	if err != nil {
+		return false
 	}
-	return false
+	return cmp == EQUAL
 }
 
 type Float struct {
@@ -131,6 +202,38 @@ func (f *Float) IntValue() int64 {
 
 func (f *Float) FloatValue() float64 {
 	return f.Value
+}
+
+func (f *Float) Plus(other Object) (Object, *Error) {
+	otherNum, ok := other.(Number)
+	if ok {
+		return f.Add(otherNum), nil
+	}
+	return nil, UnsupportedOperation(f.Type(), "+", other.Type())
+}
+
+func (f *Float) Minus(other Object) (Object, *Error) {
+	otherNum, ok := other.(Number)
+	if ok {
+		return f.Subtract(otherNum), nil
+	}
+	return nil, UnsupportedOperation(f.Type(), "-", other.Type())
+}
+
+func (f *Float) Star(other Object) (Object, *Error) {
+	otherNum, ok := other.(Number)
+	if ok {
+		return f.Multiply(otherNum), nil
+	}
+	return nil, UnsupportedOperation(f.Type(), "*", other.Type())
+}
+
+func (f *Float) Slash(other Object) (Object, *Error) {
+	otherNum, ok := other.(Number)
+	if ok {
+		return f.Divide(otherNum)
+	}
+	return nil, UnsupportedOperation(f.Type(), "/", other.Type())
 }
 
 func (f *Float) Add(other Number) Number {
@@ -157,15 +260,20 @@ func (f *Float) Divide(other Number) (Number, *Error) {
 	return &Float{Value: f.Value / float64(other.(*Integer).Value)}, nil
 }
 
-func (f *Float) CompareTo(other Number) CompareResult {
-	return compare(f, other)
+func (f *Float) CompareTo(other Object) (CompareResult, *Error) {
+	otherNum, ok := other.(Number)
+	if ok {
+		return compare(f, otherNum), nil
+	}
+	return EQUAL, UnsupportedOperation(f.Type(), "CompareTo", other.Type())
 }
 
 func (f *Float) Equals(other Object) bool {
-	if other.Type() == FLOAT_OBJ {
-		return f.Value == other.(*Float).Value
+	cmp, err := f.CompareTo(other)
+	if err != nil {
+		return false
 	}
-	return false
+	return cmp == EQUAL
 }
 
 type Boolean struct {
@@ -204,6 +312,14 @@ func (s *String) Equals(other Object) bool {
 		return s.Value == other.(*String).Value
 	}
 	return false
+}
+
+func (s *String) Plus(other Object) (Object, *Error) {
+	if other.Type() == STRING_OBJ {
+		otherString := other.(*String)
+		return &String{s.Value + otherString.Value}, nil
+	}
+	return nil, UnsupportedOperation(s.Type(), "+", other.Type())
 }
 
 type Null struct{}
@@ -246,17 +362,6 @@ func (rv *ReturnValue) Inspect() string {
 	return rv.Value.Inspect()
 }
 
-func (rv *ReturnValue) Equals(other Object) bool {
-	if other.Type() == RETURN_VALUE_OBJ {
-		orv := other.(*ReturnValue)
-		if rv.Value == nil {
-			return orv.Value == nil
-		}
-		return rv.Value.Equals(orv.Value)
-	}
-	return false
-}
-
 type Error struct {
 	Message string
 }
@@ -274,6 +379,10 @@ func (e *Error) Equals(other Object) bool {
 		return other.(*Error).Message == e.Message
 	}
 	return false
+}
+
+func UnsupportedOperation(left ObjectType, operator string, right ObjectType) *Error {
+	return &Error{fmt.Sprintf("Unsupported operation: %s %s %s", left, operator, right)}
 }
 
 type Function struct {
