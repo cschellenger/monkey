@@ -144,7 +144,8 @@ func (rs *ReturnStatement) TokenLiteral() string {
 func (rs *ReturnStatement) String() string {
 	var out bytes.Buffer
 
-	out.WriteString(rs.TokenLiteral() + " ")
+	out.WriteString(rs.TokenLiteral())
+	out.WriteString(" ")
 
 	if rs.ReturnValue != nil {
 		out.WriteString(rs.ReturnValue.String())
@@ -208,7 +209,9 @@ func (ie *InfixExpression) String() string {
 
 	out.WriteString("(")
 	out.WriteString(ie.Left.String())
-	out.WriteString(" " + ie.Operator + " ")
+	out.WriteString(" ")
+	out.WriteString(ie.Operator)
+	out.WriteString(" ")
 	out.WriteString(ie.Right.String())
 	out.WriteString(")")
 
@@ -258,6 +261,26 @@ func (bs *BlockStatement) String() string {
 		out.WriteString(s.String())
 	}
 
+	return out.String()
+}
+
+type WhileLoop struct {
+	Token     token.Token
+	Condition Expression
+	Body      *BlockStatement
+}
+
+func (wl *WhileLoop) expressionNode() {}
+func (wl *WhileLoop) TokenLiteral() string {
+	return wl.Token.Literal
+}
+func (wl *WhileLoop) String() string {
+	var out bytes.Buffer
+	out.WriteString(wl.TokenLiteral())
+	out.WriteString("(")
+	out.WriteString(wl.Condition.String())
+	out.WriteString(") ")
+	out.WriteString(wl.Body.String())
 	return out.String()
 }
 

@@ -79,6 +79,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
 
+	case *ast.WhileLoop:
+		return evalWhileLoop(node, env)
+
 	case *ast.IntegerLiteral:
 		return &object.Integer{Value: node.Value}
 
@@ -313,6 +316,26 @@ func evalNumericOperator(operator string, leftVal, rightVal object.Number) objec
 		return newError("unknown operator: %s %s %s",
 			leftVal.Type(), operator, rightVal.Type())
 	}
+}
+
+func evalWhileLoop(wl *ast.WhileLoop, env *object.Environment) object.Object {
+	keepGoing := true
+	var retVal object.Object = NULL
+	for keepGoing {
+		condition := Eval(wl.Condition, env)
+		if isError(condition) {
+			return condition
+		}
+		keepGoing = isTruthy(condition)
+		if !keepGoing {
+			break
+		}
+		retVal = Eval(wl.Body, env)
+		if retVal.Type() == object.RETURN_VALUE_OBJ {
+			break
+		}
+	}
+	return retVal
 }
 
 func evalIfExpression(ie *ast.IfExpression, env *object.Environment) object.Object {
