@@ -19,6 +19,8 @@ const (
 	RETURN_VALUE_OBJ ObjectType = "RETURN_VALUE"
 	ERROR_OBJ        ObjectType = "ERROR"
 	FUNCTION_OBJ     ObjectType = "FUNCTION"
+	BUILTIN_OBJ      ObjectType = "BUILTIN"
+	ARRAY_OBJ        ObjectType = "ARRAY"
 )
 
 type CompareResult int
@@ -411,4 +413,33 @@ func (f *Function) Inspect() string {
 }
 func (f *Function) Equals(other Object) bool {
 	return f == other
+}
+
+type BuiltinFunction func(args ...Object) Object
+
+type Builtin struct {
+	Fn BuiltinFunction
+}
+
+func (b *Builtin) Type() ObjectType { return BUILTIN_OBJ }
+func (b *Builtin) Inspect() string  { return "builtin function" }
+
+type Array struct {
+	Elements []Object
+}
+
+func (ao *Array) Type() ObjectType { return ARRAY_OBJ }
+func (ao *Array) Inspect() string {
+	var out bytes.Buffer
+
+	elements := []string{}
+	for _, e := range ao.Elements {
+		elements = append(elements, e.Inspect())
+	}
+
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
+
+	return out.String()
 }
