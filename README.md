@@ -5,3 +5,6 @@ This is my implementation of the book ["Writing An Interpreter In Go"](https://i
 - while loops
 - operator overloading - not yet user feature because defining new classes / objects is not supported
 
+TODOs:
+- Support for-in loops
+- Support user defined classes / objects
