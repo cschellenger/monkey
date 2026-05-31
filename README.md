@@ -4,6 +4,7 @@ This is my implementation of the book ["Writing An Interpreter In Go"](https://i
 - floats
 - while loops
 - operator overloading - not yet user feature because defining new classes / objects is not supported
+- GNU readline support
 
 TODOs:
 - Support for-in loops

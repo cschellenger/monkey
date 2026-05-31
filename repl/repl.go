@@ -1,14 +1,15 @@
 package repl
 
 import (
-	"bufio"
-	"fmt"
 	"io"
+	"strings"
 
 	"github.com/cschellenger/monkey/evaluator"
 	"github.com/cschellenger/monkey/lexer"
 	"github.com/cschellenger/monkey/object"
 	"github.com/cschellenger/monkey/parser"
+
+	"github.com/chzyer/readline"
 )
 
 const PROMPT = ">> "
@@ -25,21 +26,49 @@ const MONKEY_FACE = `            __,__
            '-----'
 `
 
+var completer = readline.NewPrefixCompleter(
+	readline.PcItem("puts"),
+	readline.PcItem("len"),
+	readline.PcItem("first"),
+	readline.PcItem("last"),
+	readline.PcItem("rest"),
+	readline.PcItem("push"),
+	readline.PcItem("fn"),
+	readline.PcItem("while"),
+)
+
 func Start(in io.Reader, out io.Writer) {
-	scanner := bufio.NewScanner(in)
+	rl, err := readline.NewEx(&readline.Config{
+		Prompt:          "\033[31m»\033[0m ",
+		HistoryFile:     "/tmp/monkey.readline.tmp",
+		AutoComplete:    completer,
+		InterruptPrompt: "^C",
+		EOFPrompt:       "exit",
+
+		HistorySearchFold: true,
+	})
+	if err != nil {
+		panic(err)
+	}
+	defer rl.Close()
+	rl.CaptureExitSignal()
+
 	env := object.NewEnvironment()
 
 	for {
-		fmt.Fprintf(out, PROMPT)
-		scanned := scanner.Scan()
-		if !scanned {
-			if err := scanner.Err(); err != nil {
-				fmt.Fprintf(out, "Error reading input: %v\n", err)
+		line, err := rl.Readline()
+		if err == readline.ErrInterrupt {
+			if len(line) == 0 {
+				break
+			} else {
+				continue
 			}
-			return
+		} else if err == io.EOF {
+			break
 		}
 
-		line := scanner.Text()
+		line = strings.TrimSpace(line)
+
 		l := lexer.New(line)
 		p := parser.New(l)
 
