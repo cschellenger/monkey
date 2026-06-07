@@ -6,7 +6,7 @@ import (
 	"hash/fnv"
 	"strings"
 
-	"github.com/cschellenger/monkey/ast"
+	"github.com/cschellenger/monkey/parser"
 )
 
 type ObjectType string
@@ -390,8 +390,8 @@ func UnsupportedOperation(left ObjectType, operator string, right ObjectType) *E
 }
 
 type Function struct {
-	Parameters []*ast.Identifier
-	Body       *ast.BlockStatement
+	Parameters parser.IParamsContext
+	Body       parser.IStatementContext
 	Env        *Environment
 }
 
@@ -400,15 +400,15 @@ func (f *Function) Inspect() string {
 	var out bytes.Buffer
 
 	params := []string{}
-	for _, p := range f.Parameters {
-		params = append(params, p.String())
+	for _, p := range f.Parameters.AllIdentifier() {
+		params = append(params, p.GetText())
 	}
 
 	out.WriteString("fn")
 	out.WriteString("(")
 	out.WriteString(strings.Join(params, ", "))
 	out.WriteString(") {\n")
-	out.WriteString(f.Body.String())
+	out.WriteString(f.Body.GetText())
 	out.WriteString("\n}")
 
 	return out.String()

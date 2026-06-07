@@ -4,8 +4,8 @@ import (
 	"io"
 	"strings"
 
+	"github.com/antlr4-go/antlr/v4"
 	"github.com/cschellenger/monkey/evaluator"
-	"github.com/cschellenger/monkey/lexer"
 	"github.com/cschellenger/monkey/object"
 	"github.com/cschellenger/monkey/parser"
 
@@ -68,13 +68,16 @@ func Start(in io.Reader, out io.Writer) {
 		}
 
 		line = strings.TrimSpace(line)
+		input := antlr.NewInputStream(line)
+		l := parser.NewMonkeyLexer(input)
+		stream := antlr.NewCommonTokenStream(l, 0)
+		p := parser.NewMonkeyParser(stream)
+		errListener := evaluator.NewErrListener()
+		p.AddErrorListener(errListener)
 
-		l := lexer.New(line)
-		p := parser.New(l)
-
-		program := p.ParseProgram()
-		if len(p.Errors()) != 0 {
-			printParserErrors(out, p.Errors())
+		program := p.Prog()
+		if len(errListener.Errors) != 0 {
+			printParserErrors(out, errListener.Errors)
 			continue
 		}
 
