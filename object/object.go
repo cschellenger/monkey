@@ -391,7 +391,7 @@ func UnsupportedOperation(left ObjectType, operator string, right ObjectType) *E
 
 type Function struct {
 	Parameters parser.IParamsContext
-	Body       parser.IStatementContext
+	Body       parser.ICompoundStatementContext
 	Env        *Environment
 }
 

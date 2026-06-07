@@ -8,28 +8,27 @@ options {
 prog : statement+ ;
 
 statement
-    : RETURN expression ';'                 # returnStatement
-    | LET Identifier ASSIGN expression ';'  # letStatement
-    | WHILE '(' expression ')' statement    # whileStatement
-    | '{' (statement ';'?)* '}'             # compoundStatement
-    | expression ';'?                       # expressionStatement
+    : RETURN expression ';'                                 # returnStatement
+    | LET Identifier ASSIGN expression ';'                  # letStatement
+    | WHILE '(' expression ')' '{' compoundStatement '}'    # whileStatement
+    | expression ';'?                                       # expressionStatement
     ;
 
 
 expression
-    : if_expression                                     # ifExpression
-    | function_literal                                  # functionExpression
-    | call_expression                                   # callExpression
-    | expression '[' expression ']'                     # indexExpression
-    | identifier                                        # identifierExpression
-    | literal                                           # literalExpression
-    | array_literal                                     # arrayLiteralExpression
-    | hash_literal                                      # hashLiteralExpression
-    | expression op=(STAR|SLASH|PERCENT) expression     # starSlashExpression
-    | expression op=(PLUS|MINUS) expression             # plusMinusExpression
-    | expression op=(GT|LT|GE|LE|EQ|NOT_EQ) expression  # relationExpression
-    | '(' expression ')'                                # parenExpression
-    | '!' expression                                    # negatedExpression
+    : 'if' '(' expression ')' '{' compoundStatement '}' ('else' '{' compoundStatement '}')? # ifExpression
+    | 'fn' '(' params ')' '{' compoundStatement '}'                                         # functionExpression
+    | identifier '(' expressionList ')'                                                     # callExpression
+    | expression '[' expression ']'                                                         # indexExpression
+    | identifier                                                                            # identifierExpression
+    | literal                                                                               # literalExpression
+    | '[' expressionList ']'                                                                # arrayLiteralExpression
+    | '{' (pair ',')* (pair ','?)? '}'                                                      # hashLiteralExpression
+    | expression op=(STAR|SLASH|PERCENT) expression                                         # starSlashExpression
+    | expression op=(PLUS|MINUS) expression                                                 # plusMinusExpression
+    | expression op=(GT|LT|GE|LE|EQ|NOT_EQ) expression                                      # relationExpression
+    | '(' expression ')'                                                                    # parenExpression
+    | '!' expression                                                                        # negatedExpression
     ;
 
 identifier : Identifier;
@@ -41,28 +40,16 @@ literal
     | BooleanLiteral
     ;
 
-expression_list: (expression ',')* (expression ','?)?;
+compoundStatement: (statement ';'?)*;
 
-expression_pair: expression ':' expression;
+expressionList: (expression ',')* (expression ','?)?;
 
-array_literal: '[' expression_list ']';
-
-hash_literal
-    : '{' (expression_pair ',')* (expression_pair ','?)? '}';
-
-function_literal
-    : 'fn' '(' params ')' statement;
+pair: expression ':' expression;
 
 params
     : (Identifier ',')* (Identifier ','?)?;
 
-if_expression
-    : 'if' '(' expression ')' statement ('else' statement)?;
-
-call_expression
-    : identifier '(' expression_list ')';
-
-let_statement
+let
     : LET identifier op=ASSIGN expression END
     ;
 

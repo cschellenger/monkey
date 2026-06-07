@@ -23,10 +23,6 @@ func (v *BaseMonkeyParserVisitor) VisitWhileStatement(ctx *WhileStatementContext
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMonkeyParserVisitor) VisitCompoundStatement(ctx *CompoundStatementContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BaseMonkeyParserVisitor) VisitExpressionStatement(ctx *ExpressionStatementContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -91,23 +87,15 @@ func (v *BaseMonkeyParserVisitor) VisitLiteral(ctx *LiteralContext) interface{} 
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMonkeyParserVisitor) VisitExpression_list(ctx *Expression_listContext) interface{} {
+func (v *BaseMonkeyParserVisitor) VisitCompoundStatement(ctx *CompoundStatementContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMonkeyParserVisitor) VisitExpression_pair(ctx *Expression_pairContext) interface{} {
+func (v *BaseMonkeyParserVisitor) VisitExpressionList(ctx *ExpressionListContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMonkeyParserVisitor) VisitArray_literal(ctx *Array_literalContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMonkeyParserVisitor) VisitHash_literal(ctx *Hash_literalContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMonkeyParserVisitor) VisitFunction_literal(ctx *Function_literalContext) interface{} {
+func (v *BaseMonkeyParserVisitor) VisitPair(ctx *PairContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -115,14 +103,6 @@ func (v *BaseMonkeyParserVisitor) VisitParams(ctx *ParamsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMonkeyParserVisitor) VisitIf_expression(ctx *If_expressionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMonkeyParserVisitor) VisitCall_expression(ctx *Call_expressionContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMonkeyParserVisitor) VisitLet_statement(ctx *Let_statementContext) interface{} {
+func (v *BaseMonkeyParserVisitor) VisitLet(ctx *LetContext) interface{} {
 	return v.VisitChildren(ctx)
 }

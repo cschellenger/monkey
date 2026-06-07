@@ -44,12 +44,6 @@ func (s *BaseMonkeyParserListener) EnterWhileStatement(ctx *WhileStatementContex
 // ExitWhileStatement is called when production whileStatement is exited.
 func (s *BaseMonkeyParserListener) ExitWhileStatement(ctx *WhileStatementContext) {}
 
-// EnterCompoundStatement is called when production compoundStatement is entered.
-func (s *BaseMonkeyParserListener) EnterCompoundStatement(ctx *CompoundStatementContext) {}
-
-// ExitCompoundStatement is called when production compoundStatement is exited.
-func (s *BaseMonkeyParserListener) ExitCompoundStatement(ctx *CompoundStatementContext) {}
-
 // EnterExpressionStatement is called when production expressionStatement is entered.
 func (s *BaseMonkeyParserListener) EnterExpressionStatement(ctx *ExpressionStatementContext) {}
 
@@ -146,35 +140,23 @@ func (s *BaseMonkeyParserListener) EnterLiteral(ctx *LiteralContext) {}
 // ExitLiteral is called when production literal is exited.
 func (s *BaseMonkeyParserListener) ExitLiteral(ctx *LiteralContext) {}
 
-// EnterExpression_list is called when production expression_list is entered.
-func (s *BaseMonkeyParserListener) EnterExpression_list(ctx *Expression_listContext) {}
+// EnterCompoundStatement is called when production compoundStatement is entered.
+func (s *BaseMonkeyParserListener) EnterCompoundStatement(ctx *CompoundStatementContext) {}
 
-// ExitExpression_list is called when production expression_list is exited.
-func (s *BaseMonkeyParserListener) ExitExpression_list(ctx *Expression_listContext) {}
+// ExitCompoundStatement is called when production compoundStatement is exited.
+func (s *BaseMonkeyParserListener) ExitCompoundStatement(ctx *CompoundStatementContext) {}
 
-// EnterExpression_pair is called when production expression_pair is entered.
-func (s *BaseMonkeyParserListener) EnterExpression_pair(ctx *Expression_pairContext) {}
+// EnterExpressionList is called when production expressionList is entered.
+func (s *BaseMonkeyParserListener) EnterExpressionList(ctx *ExpressionListContext) {}
 
-// ExitExpression_pair is called when production expression_pair is exited.
-func (s *BaseMonkeyParserListener) ExitExpression_pair(ctx *Expression_pairContext) {}
+// ExitExpressionList is called when production expressionList is exited.
+func (s *BaseMonkeyParserListener) ExitExpressionList(ctx *ExpressionListContext) {}
 
-// EnterArray_literal is called when production array_literal is entered.
-func (s *BaseMonkeyParserListener) EnterArray_literal(ctx *Array_literalContext) {}
+// EnterPair is called when production pair is entered.
+func (s *BaseMonkeyParserListener) EnterPair(ctx *PairContext) {}
 
-// ExitArray_literal is called when production array_literal is exited.
-func (s *BaseMonkeyParserListener) ExitArray_literal(ctx *Array_literalContext) {}
-
-// EnterHash_literal is called when production hash_literal is entered.
-func (s *BaseMonkeyParserListener) EnterHash_literal(ctx *Hash_literalContext) {}
-
-// ExitHash_literal is called when production hash_literal is exited.
-func (s *BaseMonkeyParserListener) ExitHash_literal(ctx *Hash_literalContext) {}
-
-// EnterFunction_literal is called when production function_literal is entered.
-func (s *BaseMonkeyParserListener) EnterFunction_literal(ctx *Function_literalContext) {}
-
-// ExitFunction_literal is called when production function_literal is exited.
-func (s *BaseMonkeyParserListener) ExitFunction_literal(ctx *Function_literalContext) {}
+// ExitPair is called when production pair is exited.
+func (s *BaseMonkeyParserListener) ExitPair(ctx *PairContext) {}
 
 // EnterParams is called when production params is entered.
 func (s *BaseMonkeyParserListener) EnterParams(ctx *ParamsContext) {}
@@ -182,20 +164,8 @@ func (s *BaseMonkeyParserListener) EnterParams(ctx *ParamsContext) {}
 // ExitParams is called when production params is exited.
 func (s *BaseMonkeyParserListener) ExitParams(ctx *ParamsContext) {}
 
-// EnterIf_expression is called when production if_expression is entered.
-func (s *BaseMonkeyParserListener) EnterIf_expression(ctx *If_expressionContext) {}
+// EnterLet is called when production let is entered.
+func (s *BaseMonkeyParserListener) EnterLet(ctx *LetContext) {}
 
-// ExitIf_expression is called when production if_expression is exited.
-func (s *BaseMonkeyParserListener) ExitIf_expression(ctx *If_expressionContext) {}
-
-// EnterCall_expression is called when production call_expression is entered.
-func (s *BaseMonkeyParserListener) EnterCall_expression(ctx *Call_expressionContext) {}
-
-// ExitCall_expression is called when production call_expression is exited.
-func (s *BaseMonkeyParserListener) ExitCall_expression(ctx *Call_expressionContext) {}
-
-// EnterLet_statement is called when production let_statement is entered.
-func (s *BaseMonkeyParserListener) EnterLet_statement(ctx *Let_statementContext) {}
-
-// ExitLet_statement is called when production let_statement is exited.
-func (s *BaseMonkeyParserListener) ExitLet_statement(ctx *Let_statementContext) {}
+// ExitLet is called when production let is exited.
+func (s *BaseMonkeyParserListener) ExitLet(ctx *LetContext) {}

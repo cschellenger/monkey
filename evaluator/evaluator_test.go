@@ -323,7 +323,7 @@ func TestLetStatements(t *testing.T) {
 }
 
 func TestFunctionObject(t *testing.T) {
-	input := "fn(x) { x + 2; };"
+	input := "fn(x) { x + 2 };"
 
 	evaluated := testEval(input)
 	fn, ok := evaluated.(*object.Function)
@@ -340,7 +340,7 @@ func TestFunctionObject(t *testing.T) {
 		t.Fatalf("parameter is not 'x'. got=%q", fn.Parameters.Identifier(0))
 	}
 
-	expectedBody := "{x+2;}"
+	expectedBody := "x+2"
 
 	if fn.Body.GetText() != expectedBody {
 		t.Fatalf("body is not %q. got=%q", expectedBody, fn.Body.GetText())

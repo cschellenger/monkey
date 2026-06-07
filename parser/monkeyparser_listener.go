@@ -19,9 +19,6 @@ type MonkeyParserListener interface {
 	// EnterWhileStatement is called when entering the whileStatement production.
 	EnterWhileStatement(c *WhileStatementContext)
 
-	// EnterCompoundStatement is called when entering the compoundStatement production.
-	EnterCompoundStatement(c *CompoundStatementContext)
-
 	// EnterExpressionStatement is called when entering the expressionStatement production.
 	EnterExpressionStatement(c *ExpressionStatementContext)
 
@@ -70,32 +67,20 @@ type MonkeyParserListener interface {
 	// EnterLiteral is called when entering the literal production.
 	EnterLiteral(c *LiteralContext)
 
-	// EnterExpression_list is called when entering the expression_list production.
-	EnterExpression_list(c *Expression_listContext)
+	// EnterCompoundStatement is called when entering the compoundStatement production.
+	EnterCompoundStatement(c *CompoundStatementContext)
 
-	// EnterExpression_pair is called when entering the expression_pair production.
-	EnterExpression_pair(c *Expression_pairContext)
+	// EnterExpressionList is called when entering the expressionList production.
+	EnterExpressionList(c *ExpressionListContext)
 
-	// EnterArray_literal is called when entering the array_literal production.
-	EnterArray_literal(c *Array_literalContext)
-
-	// EnterHash_literal is called when entering the hash_literal production.
-	EnterHash_literal(c *Hash_literalContext)
-
-	// EnterFunction_literal is called when entering the function_literal production.
-	EnterFunction_literal(c *Function_literalContext)
+	// EnterPair is called when entering the pair production.
+	EnterPair(c *PairContext)
 
 	// EnterParams is called when entering the params production.
 	EnterParams(c *ParamsContext)
 
-	// EnterIf_expression is called when entering the if_expression production.
-	EnterIf_expression(c *If_expressionContext)
-
-	// EnterCall_expression is called when entering the call_expression production.
-	EnterCall_expression(c *Call_expressionContext)
-
-	// EnterLet_statement is called when entering the let_statement production.
-	EnterLet_statement(c *Let_statementContext)
+	// EnterLet is called when entering the let production.
+	EnterLet(c *LetContext)
 
 	// ExitProg is called when exiting the prog production.
 	ExitProg(c *ProgContext)
@@ -108,9 +93,6 @@ type MonkeyParserListener interface {
 
 	// ExitWhileStatement is called when exiting the whileStatement production.
 	ExitWhileStatement(c *WhileStatementContext)
-
-	// ExitCompoundStatement is called when exiting the compoundStatement production.
-	ExitCompoundStatement(c *CompoundStatementContext)
 
 	// ExitExpressionStatement is called when exiting the expressionStatement production.
 	ExitExpressionStatement(c *ExpressionStatementContext)
@@ -160,30 +142,18 @@ type MonkeyParserListener interface {
 	// ExitLiteral is called when exiting the literal production.
 	ExitLiteral(c *LiteralContext)
 
-	// ExitExpression_list is called when exiting the expression_list production.
-	ExitExpression_list(c *Expression_listContext)
+	// ExitCompoundStatement is called when exiting the compoundStatement production.
+	ExitCompoundStatement(c *CompoundStatementContext)
 
-	// ExitExpression_pair is called when exiting the expression_pair production.
-	ExitExpression_pair(c *Expression_pairContext)
+	// ExitExpressionList is called when exiting the expressionList production.
+	ExitExpressionList(c *ExpressionListContext)
 
-	// ExitArray_literal is called when exiting the array_literal production.
-	ExitArray_literal(c *Array_literalContext)
-
-	// ExitHash_literal is called when exiting the hash_literal production.
-	ExitHash_literal(c *Hash_literalContext)
-
-	// ExitFunction_literal is called when exiting the function_literal production.
-	ExitFunction_literal(c *Function_literalContext)
+	// ExitPair is called when exiting the pair production.
+	ExitPair(c *PairContext)
 
 	// ExitParams is called when exiting the params production.
 	ExitParams(c *ParamsContext)
 
-	// ExitIf_expression is called when exiting the if_expression production.
-	ExitIf_expression(c *If_expressionContext)
-
-	// ExitCall_expression is called when exiting the call_expression production.
-	ExitCall_expression(c *Call_expressionContext)
-
-	// ExitLet_statement is called when exiting the let_statement production.
-	ExitLet_statement(c *Let_statementContext)
+	// ExitLet is called when exiting the let production.
+	ExitLet(c *LetContext)
 }

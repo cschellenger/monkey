@@ -45,92 +45,88 @@ func monkeyparserParserInit() {
 		"LBRACE", "RBRACE", "LBRACKET", "RBRACKET", "WS",
 	}
 	staticData.RuleNames = []string{
-		"prog", "statement", "expression", "identifier", "literal", "expression_list",
-		"expression_pair", "array_literal", "hash_literal", "function_literal",
-		"params", "if_expression", "call_expression", "let_statement",
+		"prog", "statement", "expression", "identifier", "literal", "compoundStatement",
+		"expressionList", "pair", "params", "let",
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 34, 184, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
-		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
-		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 1, 0, 4, 0, 30, 8, 0, 11,
-		0, 12, 0, 31, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 53, 8, 1,
-		5, 1, 55, 8, 1, 10, 1, 12, 1, 58, 9, 1, 1, 1, 1, 1, 1, 1, 3, 1, 63, 8,
-		1, 3, 1, 65, 8, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2,
-		1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 2, 81, 8, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
-		2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 5, 2, 97, 8, 2,
-		10, 2, 12, 2, 100, 9, 2, 1, 3, 1, 3, 1, 4, 1, 4, 1, 5, 1, 5, 1, 5, 5, 5,
-		109, 8, 5, 10, 5, 12, 5, 112, 9, 5, 1, 5, 1, 5, 3, 5, 116, 8, 5, 3, 5,
-		118, 8, 5, 1, 6, 1, 6, 1, 6, 1, 6, 1, 7, 1, 7, 1, 7, 1, 7, 1, 8, 1, 8,
-		1, 8, 1, 8, 5, 8, 132, 8, 8, 10, 8, 12, 8, 135, 9, 8, 1, 8, 1, 8, 3, 8,
-		139, 8, 8, 3, 8, 141, 8, 8, 1, 8, 1, 8, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1,
-		9, 1, 10, 1, 10, 5, 10, 153, 8, 10, 10, 10, 12, 10, 156, 9, 10, 1, 10,
-		1, 10, 3, 10, 160, 8, 10, 3, 10, 162, 8, 10, 1, 11, 1, 11, 1, 11, 1, 11,
-		1, 11, 1, 11, 1, 11, 3, 11, 171, 8, 11, 1, 12, 1, 12, 1, 12, 1, 12, 1,
-		12, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 1, 13, 0, 1, 4, 14, 0, 2,
-		4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 0, 4, 1, 0, 11, 13, 1, 0,
-		8, 9, 1, 0, 15, 20, 2, 0, 23, 24, 26, 27, 199, 0, 29, 1, 0, 0, 0, 2, 64,
-		1, 0, 0, 0, 4, 80, 1, 0, 0, 0, 6, 101, 1, 0, 0, 0, 8, 103, 1, 0, 0, 0,
-		10, 110, 1, 0, 0, 0, 12, 119, 1, 0, 0, 0, 14, 123, 1, 0, 0, 0, 16, 127,
-		1, 0, 0, 0, 18, 144, 1, 0, 0, 0, 20, 154, 1, 0, 0, 0, 22, 163, 1, 0, 0,
-		0, 24, 172, 1, 0, 0, 0, 26, 177, 1, 0, 0, 0, 28, 30, 3, 2, 1, 0, 29, 28,
-		1, 0, 0, 0, 30, 31, 1, 0, 0, 0, 31, 29, 1, 0, 0, 0, 31, 32, 1, 0, 0, 0,
-		32, 1, 1, 0, 0, 0, 33, 34, 5, 6, 0, 0, 34, 35, 3, 4, 2, 0, 35, 36, 5, 14,
-		0, 0, 36, 65, 1, 0, 0, 0, 37, 38, 5, 5, 0, 0, 38, 39, 5, 25, 0, 0, 39,
-		40, 5, 7, 0, 0, 40, 41, 3, 4, 2, 0, 41, 42, 5, 14, 0, 0, 42, 65, 1, 0,
-		0, 0, 43, 44, 5, 4, 0, 0, 44, 45, 5, 28, 0, 0, 45, 46, 3, 4, 2, 0, 46,
-		47, 5, 29, 0, 0, 47, 48, 3, 2, 1, 0, 48, 65, 1, 0, 0, 0, 49, 56, 5, 30,
-		0, 0, 50, 52, 3, 2, 1, 0, 51, 53, 5, 14, 0, 0, 52, 51, 1, 0, 0, 0, 52,
-		53, 1, 0, 0, 0, 53, 55, 1, 0, 0, 0, 54, 50, 1, 0, 0, 0, 55, 58, 1, 0, 0,
-		0, 56, 54, 1, 0, 0, 0, 56, 57, 1, 0, 0, 0, 57, 59, 1, 0, 0, 0, 58, 56,
-		1, 0, 0, 0, 59, 65, 5, 31, 0, 0, 60, 62, 3, 4, 2, 0, 61, 63, 5, 14, 0,
-		0, 62, 61, 1, 0, 0, 0, 62, 63, 1, 0, 0, 0, 63, 65, 1, 0, 0, 0, 64, 33,
-		1, 0, 0, 0, 64, 37, 1, 0, 0, 0, 64, 43, 1, 0, 0, 0, 64, 49, 1, 0, 0, 0,
-		64, 60, 1, 0, 0, 0, 65, 3, 1, 0, 0, 0, 66, 67, 6, 2, -1, 0, 67, 81, 3,
-		22, 11, 0, 68, 81, 3, 18, 9, 0, 69, 81, 3, 24, 12, 0, 70, 81, 3, 6, 3,
-		0, 71, 81, 3, 8, 4, 0, 72, 81, 3, 14, 7, 0, 73, 81, 3, 16, 8, 0, 74, 75,
-		5, 28, 0, 0, 75, 76, 3, 4, 2, 0, 76, 77, 5, 29, 0, 0, 77, 81, 1, 0, 0,
-		0, 78, 79, 5, 10, 0, 0, 79, 81, 3, 4, 2, 1, 80, 66, 1, 0, 0, 0, 80, 68,
-		1, 0, 0, 0, 80, 69, 1, 0, 0, 0, 80, 70, 1, 0, 0, 0, 80, 71, 1, 0, 0, 0,
-		80, 72, 1, 0, 0, 0, 80, 73, 1, 0, 0, 0, 80, 74, 1, 0, 0, 0, 80, 78, 1,
-		0, 0, 0, 81, 98, 1, 0, 0, 0, 82, 83, 10, 5, 0, 0, 83, 84, 7, 0, 0, 0, 84,
-		97, 3, 4, 2, 6, 85, 86, 10, 4, 0, 0, 86, 87, 7, 1, 0, 0, 87, 97, 3, 4,
-		2, 5, 88, 89, 10, 3, 0, 0, 89, 90, 7, 2, 0, 0, 90, 97, 3, 4, 2, 4, 91,
-		92, 10, 10, 0, 0, 92, 93, 5, 32, 0, 0, 93, 94, 3, 4, 2, 0, 94, 95, 5, 33,
-		0, 0, 95, 97, 1, 0, 0, 0, 96, 82, 1, 0, 0, 0, 96, 85, 1, 0, 0, 0, 96, 88,
-		1, 0, 0, 0, 96, 91, 1, 0, 0, 0, 97, 100, 1, 0, 0, 0, 98, 96, 1, 0, 0, 0,
-		98, 99, 1, 0, 0, 0, 99, 5, 1, 0, 0, 0, 100, 98, 1, 0, 0, 0, 101, 102, 5,
-		25, 0, 0, 102, 7, 1, 0, 0, 0, 103, 104, 7, 3, 0, 0, 104, 9, 1, 0, 0, 0,
-		105, 106, 3, 4, 2, 0, 106, 107, 5, 21, 0, 0, 107, 109, 1, 0, 0, 0, 108,
-		105, 1, 0, 0, 0, 109, 112, 1, 0, 0, 0, 110, 108, 1, 0, 0, 0, 110, 111,
-		1, 0, 0, 0, 111, 117, 1, 0, 0, 0, 112, 110, 1, 0, 0, 0, 113, 115, 3, 4,
-		2, 0, 114, 116, 5, 21, 0, 0, 115, 114, 1, 0, 0, 0, 115, 116, 1, 0, 0, 0,
-		116, 118, 1, 0, 0, 0, 117, 113, 1, 0, 0, 0, 117, 118, 1, 0, 0, 0, 118,
-		11, 1, 0, 0, 0, 119, 120, 3, 4, 2, 0, 120, 121, 5, 22, 0, 0, 121, 122,
-		3, 4, 2, 0, 122, 13, 1, 0, 0, 0, 123, 124, 5, 32, 0, 0, 124, 125, 3, 10,
-		5, 0, 125, 126, 5, 33, 0, 0, 126, 15, 1, 0, 0, 0, 127, 133, 5, 30, 0, 0,
-		128, 129, 3, 12, 6, 0, 129, 130, 5, 21, 0, 0, 130, 132, 1, 0, 0, 0, 131,
-		128, 1, 0, 0, 0, 132, 135, 1, 0, 0, 0, 133, 131, 1, 0, 0, 0, 133, 134,
-		1, 0, 0, 0, 134, 140, 1, 0, 0, 0, 135, 133, 1, 0, 0, 0, 136, 138, 3, 12,
-		6, 0, 137, 139, 5, 21, 0, 0, 138, 137, 1, 0, 0, 0, 138, 139, 1, 0, 0, 0,
-		139, 141, 1, 0, 0, 0, 140, 136, 1, 0, 0, 0, 140, 141, 1, 0, 0, 0, 141,
-		142, 1, 0, 0, 0, 142, 143, 5, 31, 0, 0, 143, 17, 1, 0, 0, 0, 144, 145,
-		5, 1, 0, 0, 145, 146, 5, 28, 0, 0, 146, 147, 3, 20, 10, 0, 147, 148, 5,
-		29, 0, 0, 148, 149, 3, 2, 1, 0, 149, 19, 1, 0, 0, 0, 150, 151, 5, 25, 0,
-		0, 151, 153, 5, 21, 0, 0, 152, 150, 1, 0, 0, 0, 153, 156, 1, 0, 0, 0, 154,
-		152, 1, 0, 0, 0, 154, 155, 1, 0, 0, 0, 155, 161, 1, 0, 0, 0, 156, 154,
-		1, 0, 0, 0, 157, 159, 5, 25, 0, 0, 158, 160, 5, 21, 0, 0, 159, 158, 1,
-		0, 0, 0, 159, 160, 1, 0, 0, 0, 160, 162, 1, 0, 0, 0, 161, 157, 1, 0, 0,
-		0, 161, 162, 1, 0, 0, 0, 162, 21, 1, 0, 0, 0, 163, 164, 5, 2, 0, 0, 164,
-		165, 5, 28, 0, 0, 165, 166, 3, 4, 2, 0, 166, 167, 5, 29, 0, 0, 167, 170,
-		3, 2, 1, 0, 168, 169, 5, 3, 0, 0, 169, 171, 3, 2, 1, 0, 170, 168, 1, 0,
-		0, 0, 170, 171, 1, 0, 0, 0, 171, 23, 1, 0, 0, 0, 172, 173, 3, 6, 3, 0,
-		173, 174, 5, 28, 0, 0, 174, 175, 3, 10, 5, 0, 175, 176, 5, 29, 0, 0, 176,
-		25, 1, 0, 0, 0, 177, 178, 5, 5, 0, 0, 178, 179, 3, 6, 3, 0, 179, 180, 5,
-		7, 0, 0, 180, 181, 3, 4, 2, 0, 181, 182, 5, 14, 0, 0, 182, 27, 1, 0, 0,
-		0, 18, 31, 52, 56, 62, 64, 80, 96, 98, 110, 115, 117, 133, 138, 140, 154,
-		159, 161, 170,
+		4, 1, 34, 177, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 1, 0, 4,
+		0, 22, 8, 0, 11, 0, 12, 0, 23, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 3, 1, 46, 8, 1, 3, 1, 48, 8, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1,
+		2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 2, 63, 8, 2, 1, 2, 1, 2,
+		1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2,
+		1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 5, 2, 88, 8, 2, 10,
+		2, 12, 2, 91, 9, 2, 1, 2, 1, 2, 3, 2, 95, 8, 2, 3, 2, 97, 8, 2, 1, 2, 1,
+		2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 2, 106, 8, 2, 1, 2, 1, 2, 1, 2, 1,
+		2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 5, 2, 122,
+		8, 2, 10, 2, 12, 2, 125, 9, 2, 1, 3, 1, 3, 1, 4, 1, 4, 1, 5, 1, 5, 3, 5,
+		133, 8, 5, 5, 5, 135, 8, 5, 10, 5, 12, 5, 138, 9, 5, 1, 6, 1, 6, 1, 6,
+		5, 6, 143, 8, 6, 10, 6, 12, 6, 146, 9, 6, 1, 6, 1, 6, 3, 6, 150, 8, 6,
+		3, 6, 152, 8, 6, 1, 7, 1, 7, 1, 7, 1, 7, 1, 8, 1, 8, 5, 8, 160, 8, 8, 10,
+		8, 12, 8, 163, 9, 8, 1, 8, 1, 8, 3, 8, 167, 8, 8, 3, 8, 169, 8, 8, 1, 9,
+		1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 0, 1, 4, 10, 0, 2, 4, 6, 8, 10, 12,
+		14, 16, 18, 0, 4, 1, 0, 11, 13, 1, 0, 8, 9, 1, 0, 15, 20, 2, 0, 23, 24,
+		26, 27, 195, 0, 21, 1, 0, 0, 0, 2, 47, 1, 0, 0, 0, 4, 105, 1, 0, 0, 0,
+		6, 126, 1, 0, 0, 0, 8, 128, 1, 0, 0, 0, 10, 136, 1, 0, 0, 0, 12, 144, 1,
+		0, 0, 0, 14, 153, 1, 0, 0, 0, 16, 161, 1, 0, 0, 0, 18, 170, 1, 0, 0, 0,
+		20, 22, 3, 2, 1, 0, 21, 20, 1, 0, 0, 0, 22, 23, 1, 0, 0, 0, 23, 21, 1,
+		0, 0, 0, 23, 24, 1, 0, 0, 0, 24, 1, 1, 0, 0, 0, 25, 26, 5, 6, 0, 0, 26,
+		27, 3, 4, 2, 0, 27, 28, 5, 14, 0, 0, 28, 48, 1, 0, 0, 0, 29, 30, 5, 5,
+		0, 0, 30, 31, 5, 25, 0, 0, 31, 32, 5, 7, 0, 0, 32, 33, 3, 4, 2, 0, 33,
+		34, 5, 14, 0, 0, 34, 48, 1, 0, 0, 0, 35, 36, 5, 4, 0, 0, 36, 37, 5, 28,
+		0, 0, 37, 38, 3, 4, 2, 0, 38, 39, 5, 29, 0, 0, 39, 40, 5, 30, 0, 0, 40,
+		41, 3, 10, 5, 0, 41, 42, 5, 31, 0, 0, 42, 48, 1, 0, 0, 0, 43, 45, 3, 4,
+		2, 0, 44, 46, 5, 14, 0, 0, 45, 44, 1, 0, 0, 0, 45, 46, 1, 0, 0, 0, 46,
+		48, 1, 0, 0, 0, 47, 25, 1, 0, 0, 0, 47, 29, 1, 0, 0, 0, 47, 35, 1, 0, 0,
+		0, 47, 43, 1, 0, 0, 0, 48, 3, 1, 0, 0, 0, 49, 50, 6, 2, -1, 0, 50, 51,
+		5, 2, 0, 0, 51, 52, 5, 28, 0, 0, 52, 53, 3, 4, 2, 0, 53, 54, 5, 29, 0,
+		0, 54, 55, 5, 30, 0, 0, 55, 56, 3, 10, 5, 0, 56, 62, 5, 31, 0, 0, 57, 58,
+		5, 3, 0, 0, 58, 59, 5, 30, 0, 0, 59, 60, 3, 10, 5, 0, 60, 61, 5, 31, 0,
+		0, 61, 63, 1, 0, 0, 0, 62, 57, 1, 0, 0, 0, 62, 63, 1, 0, 0, 0, 63, 106,
+		1, 0, 0, 0, 64, 65, 5, 1, 0, 0, 65, 66, 5, 28, 0, 0, 66, 67, 3, 16, 8,
+		0, 67, 68, 5, 29, 0, 0, 68, 69, 5, 30, 0, 0, 69, 70, 3, 10, 5, 0, 70, 71,
+		5, 31, 0, 0, 71, 106, 1, 0, 0, 0, 72, 73, 3, 6, 3, 0, 73, 74, 5, 28, 0,
+		0, 74, 75, 3, 12, 6, 0, 75, 76, 5, 29, 0, 0, 76, 106, 1, 0, 0, 0, 77, 106,
+		3, 6, 3, 0, 78, 106, 3, 8, 4, 0, 79, 80, 5, 32, 0, 0, 80, 81, 3, 12, 6,
+		0, 81, 82, 5, 33, 0, 0, 82, 106, 1, 0, 0, 0, 83, 89, 5, 30, 0, 0, 84, 85,
+		3, 14, 7, 0, 85, 86, 5, 21, 0, 0, 86, 88, 1, 0, 0, 0, 87, 84, 1, 0, 0,
+		0, 88, 91, 1, 0, 0, 0, 89, 87, 1, 0, 0, 0, 89, 90, 1, 0, 0, 0, 90, 96,
+		1, 0, 0, 0, 91, 89, 1, 0, 0, 0, 92, 94, 3, 14, 7, 0, 93, 95, 5, 21, 0,
+		0, 94, 93, 1, 0, 0, 0, 94, 95, 1, 0, 0, 0, 95, 97, 1, 0, 0, 0, 96, 92,
+		1, 0, 0, 0, 96, 97, 1, 0, 0, 0, 97, 98, 1, 0, 0, 0, 98, 106, 5, 31, 0,
+		0, 99, 100, 5, 28, 0, 0, 100, 101, 3, 4, 2, 0, 101, 102, 5, 29, 0, 0, 102,
+		106, 1, 0, 0, 0, 103, 104, 5, 10, 0, 0, 104, 106, 3, 4, 2, 1, 105, 49,
+		1, 0, 0, 0, 105, 64, 1, 0, 0, 0, 105, 72, 1, 0, 0, 0, 105, 77, 1, 0, 0,
+		0, 105, 78, 1, 0, 0, 0, 105, 79, 1, 0, 0, 0, 105, 83, 1, 0, 0, 0, 105,
+		99, 1, 0, 0, 0, 105, 103, 1, 0, 0, 0, 106, 123, 1, 0, 0, 0, 107, 108, 10,
+		5, 0, 0, 108, 109, 7, 0, 0, 0, 109, 122, 3, 4, 2, 6, 110, 111, 10, 4, 0,
+		0, 111, 112, 7, 1, 0, 0, 112, 122, 3, 4, 2, 5, 113, 114, 10, 3, 0, 0, 114,
+		115, 7, 2, 0, 0, 115, 122, 3, 4, 2, 4, 116, 117, 10, 10, 0, 0, 117, 118,
+		5, 32, 0, 0, 118, 119, 3, 4, 2, 0, 119, 120, 5, 33, 0, 0, 120, 122, 1,
+		0, 0, 0, 121, 107, 1, 0, 0, 0, 121, 110, 1, 0, 0, 0, 121, 113, 1, 0, 0,
+		0, 121, 116, 1, 0, 0, 0, 122, 125, 1, 0, 0, 0, 123, 121, 1, 0, 0, 0, 123,
+		124, 1, 0, 0, 0, 124, 5, 1, 0, 0, 0, 125, 123, 1, 0, 0, 0, 126, 127, 5,
+		25, 0, 0, 127, 7, 1, 0, 0, 0, 128, 129, 7, 3, 0, 0, 129, 9, 1, 0, 0, 0,
+		130, 132, 3, 2, 1, 0, 131, 133, 5, 14, 0, 0, 132, 131, 1, 0, 0, 0, 132,
+		133, 1, 0, 0, 0, 133, 135, 1, 0, 0, 0, 134, 130, 1, 0, 0, 0, 135, 138,
+		1, 0, 0, 0, 136, 134, 1, 0, 0, 0, 136, 137, 1, 0, 0, 0, 137, 11, 1, 0,
+		0, 0, 138, 136, 1, 0, 0, 0, 139, 140, 3, 4, 2, 0, 140, 141, 5, 21, 0, 0,
+		141, 143, 1, 0, 0, 0, 142, 139, 1, 0, 0, 0, 143, 146, 1, 0, 0, 0, 144,
+		142, 1, 0, 0, 0, 144, 145, 1, 0, 0, 0, 145, 151, 1, 0, 0, 0, 146, 144,
+		1, 0, 0, 0, 147, 149, 3, 4, 2, 0, 148, 150, 5, 21, 0, 0, 149, 148, 1, 0,
+		0, 0, 149, 150, 1, 0, 0, 0, 150, 152, 1, 0, 0, 0, 151, 147, 1, 0, 0, 0,
+		151, 152, 1, 0, 0, 0, 152, 13, 1, 0, 0, 0, 153, 154, 3, 4, 2, 0, 154, 155,
+		5, 22, 0, 0, 155, 156, 3, 4, 2, 0, 156, 15, 1, 0, 0, 0, 157, 158, 5, 25,
+		0, 0, 158, 160, 5, 21, 0, 0, 159, 157, 1, 0, 0, 0, 160, 163, 1, 0, 0, 0,
+		161, 159, 1, 0, 0, 0, 161, 162, 1, 0, 0, 0, 162, 168, 1, 0, 0, 0, 163,
+		161, 1, 0, 0, 0, 164, 166, 5, 25, 0, 0, 165, 167, 5, 21, 0, 0, 166, 165,
+		1, 0, 0, 0, 166, 167, 1, 0, 0, 0, 167, 169, 1, 0, 0, 0, 168, 164, 1, 0,
+		0, 0, 168, 169, 1, 0, 0, 0, 169, 17, 1, 0, 0, 0, 170, 171, 5, 5, 0, 0,
+		171, 172, 3, 6, 3, 0, 172, 173, 5, 7, 0, 0, 173, 174, 3, 4, 2, 0, 174,
+		175, 5, 14, 0, 0, 175, 19, 1, 0, 0, 0, 18, 23, 45, 47, 62, 89, 94, 96,
+		105, 121, 123, 132, 136, 144, 149, 151, 161, 166, 168,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -207,20 +203,16 @@ const (
 
 // MonkeyParser rules.
 const (
-	MonkeyParserRULE_prog             = 0
-	MonkeyParserRULE_statement        = 1
-	MonkeyParserRULE_expression       = 2
-	MonkeyParserRULE_identifier       = 3
-	MonkeyParserRULE_literal          = 4
-	MonkeyParserRULE_expression_list  = 5
-	MonkeyParserRULE_expression_pair  = 6
-	MonkeyParserRULE_array_literal    = 7
-	MonkeyParserRULE_hash_literal     = 8
-	MonkeyParserRULE_function_literal = 9
-	MonkeyParserRULE_params           = 10
-	MonkeyParserRULE_if_expression    = 11
-	MonkeyParserRULE_call_expression  = 12
-	MonkeyParserRULE_let_statement    = 13
+	MonkeyParserRULE_prog              = 0
+	MonkeyParserRULE_statement         = 1
+	MonkeyParserRULE_expression        = 2
+	MonkeyParserRULE_identifier        = 3
+	MonkeyParserRULE_literal           = 4
+	MonkeyParserRULE_compoundStatement = 5
+	MonkeyParserRULE_expressionList    = 6
+	MonkeyParserRULE_pair              = 7
+	MonkeyParserRULE_params            = 8
+	MonkeyParserRULE_let               = 9
 )
 
 // IProgContext is an interface to support dynamic dispatch.
@@ -347,7 +339,7 @@ func (p *MonkeyParser) Prog() (localctx IProgContext) {
 	var _la int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(29)
+	p.SetState(21)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -356,11 +348,11 @@ func (p *MonkeyParser) Prog() (localctx IProgContext) {
 
 	for ok := true; ok; ok = ((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&5897192566) != 0) {
 		{
-			p.SetState(28)
+			p.SetState(20)
 			p.Statement()
 		}
 
-		p.SetState(31)
+		p.SetState(23)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
@@ -481,10 +473,14 @@ func (s *WhileStatementContext) RPAREN() antlr.TerminalNode {
 	return s.GetToken(MonkeyParserRPAREN, 0)
 }
 
-func (s *WhileStatementContext) Statement() IStatementContext {
+func (s *WhileStatementContext) LBRACE() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserLBRACE, 0)
+}
+
+func (s *WhileStatementContext) CompoundStatement() ICompoundStatementContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IStatementContext); ok {
+		if _, ok := ctx.(ICompoundStatementContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -494,7 +490,11 @@ func (s *WhileStatementContext) Statement() IStatementContext {
 		return nil
 	}
 
-	return t.(IStatementContext)
+	return t.(ICompoundStatementContext)
+}
+
+func (s *WhileStatementContext) RBRACE() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserRBRACE, 0)
 }
 
 func (s *WhileStatementContext) EnterRule(listener antlr.ParseTreeListener) {
@@ -513,103 +513,6 @@ func (s *WhileStatementContext) Accept(visitor antlr.ParseTreeVisitor) interface
 	switch t := visitor.(type) {
 	case MonkeyParserVisitor:
 		return t.VisitWhileStatement(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-type CompoundStatementContext struct {
-	StatementContext
-}
-
-func NewCompoundStatementContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *CompoundStatementContext {
-	var p = new(CompoundStatementContext)
-
-	InitEmptyStatementContext(&p.StatementContext)
-	p.parser = parser
-	p.CopyAll(ctx.(*StatementContext))
-
-	return p
-}
-
-func (s *CompoundStatementContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *CompoundStatementContext) LBRACE() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserLBRACE, 0)
-}
-
-func (s *CompoundStatementContext) RBRACE() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserRBRACE, 0)
-}
-
-func (s *CompoundStatementContext) AllStatement() []IStatementContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IStatementContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IStatementContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IStatementContext); ok {
-			tst[i] = t.(IStatementContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *CompoundStatementContext) Statement(i int) IStatementContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IStatementContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IStatementContext)
-}
-
-func (s *CompoundStatementContext) AllEND() []antlr.TerminalNode {
-	return s.GetTokens(MonkeyParserEND)
-}
-
-func (s *CompoundStatementContext) END(i int) antlr.TerminalNode {
-	return s.GetToken(MonkeyParserEND, i)
-}
-
-func (s *CompoundStatementContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.EnterCompoundStatement(s)
-	}
-}
-
-func (s *CompoundStatementContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.ExitCompoundStatement(s)
-	}
-}
-
-func (s *CompoundStatementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case MonkeyParserVisitor:
-		return t.VisitCompoundStatement(s)
 
 	default:
 		return t.VisitChildren(s)
@@ -815,20 +718,18 @@ func (s *ReturnStatementContext) Accept(visitor antlr.ParseTreeVisitor) interfac
 func (p *MonkeyParser) Statement() (localctx IStatementContext) {
 	localctx = NewStatementContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 2, MonkeyParserRULE_statement)
-	var _la int
-
-	p.SetState(64)
+	p.SetState(47)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 4, p.GetParserRuleContext()) {
-	case 1:
+	switch p.GetTokenStream().LA(1) {
+	case MonkeyParserRETURN:
 		localctx = NewReturnStatementContext(p, localctx)
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(33)
+			p.SetState(25)
 			p.Match(MonkeyParserRETURN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -836,11 +737,11 @@ func (p *MonkeyParser) Statement() (localctx IStatementContext) {
 			}
 		}
 		{
-			p.SetState(34)
+			p.SetState(26)
 			p.expression(0)
 		}
 		{
-			p.SetState(35)
+			p.SetState(27)
 			p.Match(MonkeyParserEND)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -848,11 +749,11 @@ func (p *MonkeyParser) Statement() (localctx IStatementContext) {
 			}
 		}
 
-	case 2:
+	case MonkeyParserLET:
 		localctx = NewLetStatementContext(p, localctx)
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(37)
+			p.SetState(29)
 			p.Match(MonkeyParserLET)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -860,7 +761,7 @@ func (p *MonkeyParser) Statement() (localctx IStatementContext) {
 			}
 		}
 		{
-			p.SetState(38)
+			p.SetState(30)
 			p.Match(MonkeyParserIdentifier)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -868,7 +769,7 @@ func (p *MonkeyParser) Statement() (localctx IStatementContext) {
 			}
 		}
 		{
-			p.SetState(39)
+			p.SetState(31)
 			p.Match(MonkeyParserASSIGN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -876,11 +777,11 @@ func (p *MonkeyParser) Statement() (localctx IStatementContext) {
 			}
 		}
 		{
-			p.SetState(40)
+			p.SetState(32)
 			p.expression(0)
 		}
 		{
-			p.SetState(41)
+			p.SetState(33)
 			p.Match(MonkeyParserEND)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -888,11 +789,11 @@ func (p *MonkeyParser) Statement() (localctx IStatementContext) {
 			}
 		}
 
-	case 3:
+	case MonkeyParserWHILE:
 		localctx = NewWhileStatementContext(p, localctx)
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(43)
+			p.SetState(35)
 			p.Match(MonkeyParserWHILE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -900,7 +801,7 @@ func (p *MonkeyParser) Statement() (localctx IStatementContext) {
 			}
 		}
 		{
-			p.SetState(44)
+			p.SetState(36)
 			p.Match(MonkeyParserLPAREN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -908,11 +809,11 @@ func (p *MonkeyParser) Statement() (localctx IStatementContext) {
 			}
 		}
 		{
-			p.SetState(45)
+			p.SetState(37)
 			p.expression(0)
 		}
 		{
-			p.SetState(46)
+			p.SetState(38)
 			p.Match(MonkeyParserRPAREN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -920,61 +821,19 @@ func (p *MonkeyParser) Statement() (localctx IStatementContext) {
 			}
 		}
 		{
-			p.SetState(47)
-			p.Statement()
-		}
-
-	case 4:
-		localctx = NewCompoundStatementContext(p, localctx)
-		p.EnterOuterAlt(localctx, 4)
-		{
-			p.SetState(49)
+			p.SetState(39)
 			p.Match(MonkeyParserLBRACE)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(56)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_la = p.GetTokenStream().LA(1)
-
-		for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&5897192566) != 0 {
-			{
-				p.SetState(50)
-				p.Statement()
-			}
-			p.SetState(52)
-			p.GetErrorHandler().Sync(p)
-			if p.HasError() {
-				goto errorExit
-			}
-			_la = p.GetTokenStream().LA(1)
-
-			if _la == MonkeyParserEND {
-				{
-					p.SetState(51)
-					p.Match(MonkeyParserEND)
-					if p.HasError() {
-						// Recognition error - abort rule
-						goto errorExit
-					}
-				}
-
-			}
-
-			p.SetState(58)
-			p.GetErrorHandler().Sync(p)
-			if p.HasError() {
-				goto errorExit
-			}
-			_la = p.GetTokenStream().LA(1)
+		{
+			p.SetState(40)
+			p.CompoundStatement()
 		}
 		{
-			p.SetState(59)
+			p.SetState(41)
 			p.Match(MonkeyParserRBRACE)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -982,19 +841,19 @@ func (p *MonkeyParser) Statement() (localctx IStatementContext) {
 			}
 		}
 
-	case 5:
+	case MonkeyParserFN, MonkeyParserIF, MonkeyParserBANG, MonkeyParserBooleanLiteral, MonkeyParserStringLiteral, MonkeyParserIdentifier, MonkeyParserFloatLiteral, MonkeyParserIntegerLiteral, MonkeyParserLPAREN, MonkeyParserLBRACE, MonkeyParserLBRACKET:
 		localctx = NewExpressionStatementContext(p, localctx)
-		p.EnterOuterAlt(localctx, 5)
+		p.EnterOuterAlt(localctx, 4)
 		{
-			p.SetState(60)
+			p.SetState(43)
 			p.expression(0)
 		}
-		p.SetState(62)
+		p.SetState(45)
 		p.GetErrorHandler().Sync(p)
 
-		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 3, p.GetParserRuleContext()) == 1 {
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 1, p.GetParserRuleContext()) == 1 {
 			{
-				p.SetState(61)
+				p.SetState(44)
 				p.Match(MonkeyParserEND)
 				if p.HasError() {
 					// Recognition error - abort rule
@@ -1006,7 +865,8 @@ func (p *MonkeyParser) Statement() (localctx IStatementContext) {
 			goto errorExit
 		}
 
-	case antlr.ATNInvalidAltNumber:
+	default:
+		p.SetError(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 		goto errorExit
 	}
 
@@ -1385,10 +1245,18 @@ func (s *FunctionExpressionContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *FunctionExpressionContext) Function_literal() IFunction_literalContext {
+func (s *FunctionExpressionContext) FN() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserFN, 0)
+}
+
+func (s *FunctionExpressionContext) LPAREN() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserLPAREN, 0)
+}
+
+func (s *FunctionExpressionContext) Params() IParamsContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IFunction_literalContext); ok {
+		if _, ok := ctx.(IParamsContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -1398,7 +1266,35 @@ func (s *FunctionExpressionContext) Function_literal() IFunction_literalContext 
 		return nil
 	}
 
-	return t.(IFunction_literalContext)
+	return t.(IParamsContext)
+}
+
+func (s *FunctionExpressionContext) RPAREN() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserRPAREN, 0)
+}
+
+func (s *FunctionExpressionContext) LBRACE() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserLBRACE, 0)
+}
+
+func (s *FunctionExpressionContext) CompoundStatement() ICompoundStatementContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(ICompoundStatementContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ICompoundStatementContext)
+}
+
+func (s *FunctionExpressionContext) RBRACE() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserRBRACE, 0)
 }
 
 func (s *FunctionExpressionContext) EnterRule(listener antlr.ParseTreeListener) {
@@ -1539,10 +1435,10 @@ func (s *CallExpressionContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *CallExpressionContext) Call_expression() ICall_expressionContext {
+func (s *CallExpressionContext) Identifier() IIdentifierContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(ICall_expressionContext); ok {
+		if _, ok := ctx.(IIdentifierContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -1552,7 +1448,31 @@ func (s *CallExpressionContext) Call_expression() ICall_expressionContext {
 		return nil
 	}
 
-	return t.(ICall_expressionContext)
+	return t.(IIdentifierContext)
+}
+
+func (s *CallExpressionContext) LPAREN() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserLPAREN, 0)
+}
+
+func (s *CallExpressionContext) ExpressionList() IExpressionListContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExpressionListContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionListContext)
+}
+
+func (s *CallExpressionContext) RPAREN() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserRPAREN, 0)
 }
 
 func (s *CallExpressionContext) EnterRule(listener antlr.ParseTreeListener) {
@@ -1595,10 +1515,14 @@ func (s *ArrayLiteralExpressionContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *ArrayLiteralExpressionContext) Array_literal() IArray_literalContext {
+func (s *ArrayLiteralExpressionContext) LBRACKET() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserLBRACKET, 0)
+}
+
+func (s *ArrayLiteralExpressionContext) ExpressionList() IExpressionListContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IArray_literalContext); ok {
+		if _, ok := ctx.(IExpressionListContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -1608,7 +1532,11 @@ func (s *ArrayLiteralExpressionContext) Array_literal() IArray_literalContext {
 		return nil
 	}
 
-	return t.(IArray_literalContext)
+	return t.(IExpressionListContext)
+}
+
+func (s *ArrayLiteralExpressionContext) RBRACKET() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserRBRACKET, 0)
 }
 
 func (s *ArrayLiteralExpressionContext) EnterRule(listener antlr.ParseTreeListener) {
@@ -1745,12 +1673,45 @@ func (s *HashLiteralExpressionContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *HashLiteralExpressionContext) Hash_literal() IHash_literalContext {
+func (s *HashLiteralExpressionContext) LBRACE() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserLBRACE, 0)
+}
+
+func (s *HashLiteralExpressionContext) RBRACE() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserRBRACE, 0)
+}
+
+func (s *HashLiteralExpressionContext) AllPair() []IPairContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IPairContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IPairContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IPairContext); ok {
+			tst[i] = t.(IPairContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *HashLiteralExpressionContext) Pair(i int) IPairContext {
 	var t antlr.RuleContext
+	j := 0
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IHash_literalContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
+		if _, ok := ctx.(IPairContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
 		}
 	}
 
@@ -1758,7 +1719,15 @@ func (s *HashLiteralExpressionContext) Hash_literal() IHash_literalContext {
 		return nil
 	}
 
-	return t.(IHash_literalContext)
+	return t.(IPairContext)
+}
+
+func (s *HashLiteralExpressionContext) AllCOMMA() []antlr.TerminalNode {
+	return s.GetTokens(MonkeyParserCOMMA)
+}
+
+func (s *HashLiteralExpressionContext) COMMA(i int) antlr.TerminalNode {
+	return s.GetToken(MonkeyParserCOMMA, i)
 }
 
 func (s *HashLiteralExpressionContext) EnterRule(listener antlr.ParseTreeListener) {
@@ -1890,10 +1859,18 @@ func (s *IfExpressionContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *IfExpressionContext) If_expression() IIf_expressionContext {
+func (s *IfExpressionContext) IF() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserIF, 0)
+}
+
+func (s *IfExpressionContext) LPAREN() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserLPAREN, 0)
+}
+
+func (s *IfExpressionContext) Expression() IExpressionContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IIf_expressionContext); ok {
+		if _, ok := ctx.(IExpressionContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -1903,7 +1880,72 @@ func (s *IfExpressionContext) If_expression() IIf_expressionContext {
 		return nil
 	}
 
-	return t.(IIf_expressionContext)
+	return t.(IExpressionContext)
+}
+
+func (s *IfExpressionContext) RPAREN() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserRPAREN, 0)
+}
+
+func (s *IfExpressionContext) AllLBRACE() []antlr.TerminalNode {
+	return s.GetTokens(MonkeyParserLBRACE)
+}
+
+func (s *IfExpressionContext) LBRACE(i int) antlr.TerminalNode {
+	return s.GetToken(MonkeyParserLBRACE, i)
+}
+
+func (s *IfExpressionContext) AllCompoundStatement() []ICompoundStatementContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(ICompoundStatementContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]ICompoundStatementContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(ICompoundStatementContext); ok {
+			tst[i] = t.(ICompoundStatementContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *IfExpressionContext) CompoundStatement(i int) ICompoundStatementContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(ICompoundStatementContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ICompoundStatementContext)
+}
+
+func (s *IfExpressionContext) AllRBRACE() []antlr.TerminalNode {
+	return s.GetTokens(MonkeyParserRBRACE)
+}
+
+func (s *IfExpressionContext) RBRACE(i int) antlr.TerminalNode {
+	return s.GetToken(MonkeyParserRBRACE, i)
+}
+
+func (s *IfExpressionContext) ELSE() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserELSE, 0)
 }
 
 func (s *IfExpressionContext) EnterRule(listener antlr.ParseTreeListener) {
@@ -2002,21 +2044,101 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(80)
+	p.SetState(105)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
 
-	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 5, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 7, p.GetParserRuleContext()) {
 	case 1:
 		localctx = NewIfExpressionContext(p, localctx)
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 
 		{
-			p.SetState(67)
-			p.If_expression()
+			p.SetState(50)
+			p.Match(MonkeyParserIF)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(51)
+			p.Match(MonkeyParserLPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(52)
+			p.expression(0)
+		}
+		{
+			p.SetState(53)
+			p.Match(MonkeyParserRPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(54)
+			p.Match(MonkeyParserLBRACE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(55)
+			p.CompoundStatement()
+		}
+		{
+			p.SetState(56)
+			p.Match(MonkeyParserRBRACE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		p.SetState(62)
+		p.GetErrorHandler().Sync(p)
+
+		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 3, p.GetParserRuleContext()) == 1 {
+			{
+				p.SetState(57)
+				p.Match(MonkeyParserELSE)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+			{
+				p.SetState(58)
+				p.Match(MonkeyParserLBRACE)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+			{
+				p.SetState(59)
+				p.CompoundStatement()
+			}
+			{
+				p.SetState(60)
+				p.Match(MonkeyParserRBRACE)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+
+		} else if p.HasError() { // JIM
+			goto errorExit
 		}
 
 	case 2:
@@ -2024,8 +2146,52 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
+			p.SetState(64)
+			p.Match(MonkeyParserFN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(65)
+			p.Match(MonkeyParserLPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(66)
+			p.Params()
+		}
+		{
+			p.SetState(67)
+			p.Match(MonkeyParserRPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
 			p.SetState(68)
-			p.Function_literal()
+			p.Match(MonkeyParserLBRACE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(69)
+			p.CompoundStatement()
+		}
+		{
+			p.SetState(70)
+			p.Match(MonkeyParserRBRACE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case 3:
@@ -2033,8 +2199,28 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(69)
-			p.Call_expression()
+			p.SetState(72)
+			p.Identifier()
+		}
+		{
+			p.SetState(73)
+			p.Match(MonkeyParserLPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(74)
+			p.ExpressionList()
+		}
+		{
+			p.SetState(75)
+			p.Match(MonkeyParserRPAREN)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case 4:
@@ -2042,7 +2228,7 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(70)
+			p.SetState(77)
 			p.Identifier()
 		}
 
@@ -2051,7 +2237,7 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(71)
+			p.SetState(78)
 			p.Literal()
 		}
 
@@ -2060,8 +2246,24 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(72)
-			p.Array_literal()
+			p.SetState(79)
+			p.Match(MonkeyParserLBRACKET)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(80)
+			p.ExpressionList()
+		}
+		{
+			p.SetState(81)
+			p.Match(MonkeyParserRBRACKET)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case 7:
@@ -2069,8 +2271,87 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(73)
-			p.Hash_literal()
+			p.SetState(83)
+			p.Match(MonkeyParserLBRACE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		p.SetState(89)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 4, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+		for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
+			if _alt == 1 {
+				{
+					p.SetState(84)
+					p.Pair()
+				}
+				{
+					p.SetState(85)
+					p.Match(MonkeyParserCOMMA)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
+				}
+
+			}
+			p.SetState(91)
+			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
+			_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 4, p.GetParserRuleContext())
+			if p.HasError() {
+				goto errorExit
+			}
+		}
+		p.SetState(96)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+
+		if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&5897192454) != 0 {
+			{
+				p.SetState(92)
+				p.Pair()
+			}
+			p.SetState(94)
+			p.GetErrorHandler().Sync(p)
+			if p.HasError() {
+				goto errorExit
+			}
+			_la = p.GetTokenStream().LA(1)
+
+			if _la == MonkeyParserCOMMA {
+				{
+					p.SetState(93)
+					p.Match(MonkeyParserCOMMA)
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
+					}
+				}
+
+			}
+
+		}
+		{
+			p.SetState(98)
+			p.Match(MonkeyParserRBRACE)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
 		}
 
 	case 8:
@@ -2078,7 +2359,7 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(74)
+			p.SetState(99)
 			p.Match(MonkeyParserLPAREN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2086,11 +2367,11 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 			}
 		}
 		{
-			p.SetState(75)
+			p.SetState(100)
 			p.expression(0)
 		}
 		{
-			p.SetState(76)
+			p.SetState(101)
 			p.Match(MonkeyParserRPAREN)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2103,7 +2384,7 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(78)
+			p.SetState(103)
 			p.Match(MonkeyParserBANG)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -2111,7 +2392,7 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 			}
 		}
 		{
-			p.SetState(79)
+			p.SetState(104)
 			p.expression(1)
 		}
 
@@ -2119,12 +2400,12 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 		goto errorExit
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(98)
+	p.SetState(123)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
-	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 7, p.GetParserRuleContext())
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 9, p.GetParserRuleContext())
 	if p.HasError() {
 		goto errorExit
 	}
@@ -2134,24 +2415,24 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 				p.TriggerExitRuleEvent()
 			}
 			_prevctx = localctx
-			p.SetState(96)
+			p.SetState(121)
 			p.GetErrorHandler().Sync(p)
 			if p.HasError() {
 				goto errorExit
 			}
 
-			switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 6, p.GetParserRuleContext()) {
+			switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 8, p.GetParserRuleContext()) {
 			case 1:
 				localctx = NewStarSlashExpressionContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, MonkeyParserRULE_expression)
-				p.SetState(82)
+				p.SetState(107)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 5)) {
 					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 5)", ""))
 					goto errorExit
 				}
 				{
-					p.SetState(83)
+					p.SetState(108)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -2169,21 +2450,21 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 					}
 				}
 				{
-					p.SetState(84)
+					p.SetState(109)
 					p.expression(6)
 				}
 
 			case 2:
 				localctx = NewPlusMinusExpressionContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, MonkeyParserRULE_expression)
-				p.SetState(85)
+				p.SetState(110)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 4)) {
 					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 4)", ""))
 					goto errorExit
 				}
 				{
-					p.SetState(86)
+					p.SetState(111)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -2201,21 +2482,21 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 					}
 				}
 				{
-					p.SetState(87)
+					p.SetState(112)
 					p.expression(5)
 				}
 
 			case 3:
 				localctx = NewRelationExpressionContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, MonkeyParserRULE_expression)
-				p.SetState(88)
+				p.SetState(113)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 3)) {
 					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 3)", ""))
 					goto errorExit
 				}
 				{
-					p.SetState(89)
+					p.SetState(114)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -2233,21 +2514,21 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 					}
 				}
 				{
-					p.SetState(90)
+					p.SetState(115)
 					p.expression(4)
 				}
 
 			case 4:
 				localctx = NewIndexExpressionContext(p, NewExpressionContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, MonkeyParserRULE_expression)
-				p.SetState(91)
+				p.SetState(116)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 10)) {
 					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 10)", ""))
 					goto errorExit
 				}
 				{
-					p.SetState(92)
+					p.SetState(117)
 					p.Match(MonkeyParserLBRACKET)
 					if p.HasError() {
 						// Recognition error - abort rule
@@ -2255,11 +2536,11 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 					}
 				}
 				{
-					p.SetState(93)
+					p.SetState(118)
 					p.expression(0)
 				}
 				{
-					p.SetState(94)
+					p.SetState(119)
 					p.Match(MonkeyParserRBRACKET)
 					if p.HasError() {
 						// Recognition error - abort rule
@@ -2272,12 +2553,12 @@ func (p *MonkeyParser) expression(_p int) (localctx IExpressionContext) {
 			}
 
 		}
-		p.SetState(100)
+		p.SetState(125)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
-		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 7, p.GetParserRuleContext())
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 9, p.GetParserRuleContext())
 		if p.HasError() {
 			goto errorExit
 		}
@@ -2381,7 +2662,7 @@ func (p *MonkeyParser) Identifier() (localctx IIdentifierContext) {
 	p.EnterRule(localctx, 6, MonkeyParserRULE_identifier)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(101)
+		p.SetState(126)
 		p.Match(MonkeyParserIdentifier)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -2504,7 +2785,7 @@ func (p *MonkeyParser) Literal() (localctx ILiteralContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(103)
+		p.SetState(128)
 		_la = p.GetTokenStream().LA(1)
 
 		if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&226492416) != 0) {
@@ -2528,69 +2809,69 @@ errorExit:
 	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
-// IExpression_listContext is an interface to support dynamic dispatch.
-type IExpression_listContext interface {
+// ICompoundStatementContext is an interface to support dynamic dispatch.
+type ICompoundStatementContext interface {
 	antlr.ParserRuleContext
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	AllExpression() []IExpressionContext
-	Expression(i int) IExpressionContext
-	AllCOMMA() []antlr.TerminalNode
-	COMMA(i int) antlr.TerminalNode
+	AllStatement() []IStatementContext
+	Statement(i int) IStatementContext
+	AllEND() []antlr.TerminalNode
+	END(i int) antlr.TerminalNode
 
-	// IsExpression_listContext differentiates from other interfaces.
-	IsExpression_listContext()
+	// IsCompoundStatementContext differentiates from other interfaces.
+	IsCompoundStatementContext()
 }
 
-type Expression_listContext struct {
+type CompoundStatementContext struct {
 	antlr.BaseParserRuleContext
 	parser antlr.Parser
 }
 
-func NewEmptyExpression_listContext() *Expression_listContext {
-	var p = new(Expression_listContext)
+func NewEmptyCompoundStatementContext() *CompoundStatementContext {
+	var p = new(CompoundStatementContext)
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_expression_list
+	p.RuleIndex = MonkeyParserRULE_compoundStatement
 	return p
 }
 
-func InitEmptyExpression_listContext(p *Expression_listContext) {
+func InitEmptyCompoundStatementContext(p *CompoundStatementContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_expression_list
+	p.RuleIndex = MonkeyParserRULE_compoundStatement
 }
 
-func (*Expression_listContext) IsExpression_listContext() {}
+func (*CompoundStatementContext) IsCompoundStatementContext() {}
 
-func NewExpression_listContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Expression_listContext {
-	var p = new(Expression_listContext)
+func NewCompoundStatementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *CompoundStatementContext {
+	var p = new(CompoundStatementContext)
 
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
-	p.RuleIndex = MonkeyParserRULE_expression_list
+	p.RuleIndex = MonkeyParserRULE_compoundStatement
 
 	return p
 }
 
-func (s *Expression_listContext) GetParser() antlr.Parser { return s.parser }
+func (s *CompoundStatementContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *Expression_listContext) AllExpression() []IExpressionContext {
+func (s *CompoundStatementContext) AllStatement() []IStatementContext {
 	children := s.GetChildren()
 	len := 0
 	for _, ctx := range children {
-		if _, ok := ctx.(IExpressionContext); ok {
+		if _, ok := ctx.(IStatementContext); ok {
 			len++
 		}
 	}
 
-	tst := make([]IExpressionContext, len)
+	tst := make([]IStatementContext, len)
 	i := 0
 	for _, ctx := range children {
-		if t, ok := ctx.(IExpressionContext); ok {
-			tst[i] = t.(IExpressionContext)
+		if t, ok := ctx.(IStatementContext); ok {
+			tst[i] = t.(IStatementContext)
 			i++
 		}
 	}
@@ -2598,777 +2879,16 @@ func (s *Expression_listContext) AllExpression() []IExpressionContext {
 	return tst
 }
 
-func (s *Expression_listContext) Expression(i int) IExpressionContext {
+func (s *CompoundStatementContext) Statement(i int) IStatementContext {
 	var t antlr.RuleContext
 	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IExpressionContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IExpressionContext)
-}
-
-func (s *Expression_listContext) AllCOMMA() []antlr.TerminalNode {
-	return s.GetTokens(MonkeyParserCOMMA)
-}
-
-func (s *Expression_listContext) COMMA(i int) antlr.TerminalNode {
-	return s.GetToken(MonkeyParserCOMMA, i)
-}
-
-func (s *Expression_listContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *Expression_listContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *Expression_listContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.EnterExpression_list(s)
-	}
-}
-
-func (s *Expression_listContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.ExitExpression_list(s)
-	}
-}
-
-func (s *Expression_listContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case MonkeyParserVisitor:
-		return t.VisitExpression_list(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *MonkeyParser) Expression_list() (localctx IExpression_listContext) {
-	localctx = NewExpression_listContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 10, MonkeyParserRULE_expression_list)
-	var _la int
-
-	var _alt int
-
-	p.EnterOuterAlt(localctx, 1)
-	p.SetState(110)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 8, p.GetParserRuleContext())
-	if p.HasError() {
-		goto errorExit
-	}
-	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
-		if _alt == 1 {
-			{
-				p.SetState(105)
-				p.expression(0)
-			}
-			{
-				p.SetState(106)
-				p.Match(MonkeyParserCOMMA)
-				if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
-				}
-			}
-
-		}
-		p.SetState(112)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 8, p.GetParserRuleContext())
-		if p.HasError() {
-			goto errorExit
-		}
-	}
-	p.SetState(117)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_la = p.GetTokenStream().LA(1)
-
-	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&5897192454) != 0 {
-		{
-			p.SetState(113)
-			p.expression(0)
-		}
-		p.SetState(115)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_la = p.GetTokenStream().LA(1)
-
-		if _la == MonkeyParserCOMMA {
-			{
-				p.SetState(114)
-				p.Match(MonkeyParserCOMMA)
-				if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
-				}
-			}
-
-		}
-
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IExpression_pairContext is an interface to support dynamic dispatch.
-type IExpression_pairContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	AllExpression() []IExpressionContext
-	Expression(i int) IExpressionContext
-	COLON() antlr.TerminalNode
-
-	// IsExpression_pairContext differentiates from other interfaces.
-	IsExpression_pairContext()
-}
-
-type Expression_pairContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyExpression_pairContext() *Expression_pairContext {
-	var p = new(Expression_pairContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_expression_pair
-	return p
-}
-
-func InitEmptyExpression_pairContext(p *Expression_pairContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_expression_pair
-}
-
-func (*Expression_pairContext) IsExpression_pairContext() {}
-
-func NewExpression_pairContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Expression_pairContext {
-	var p = new(Expression_pairContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = MonkeyParserRULE_expression_pair
-
-	return p
-}
-
-func (s *Expression_pairContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *Expression_pairContext) AllExpression() []IExpressionContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IExpressionContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IExpressionContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IExpressionContext); ok {
-			tst[i] = t.(IExpressionContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *Expression_pairContext) Expression(i int) IExpressionContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IExpressionContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IExpressionContext)
-}
-
-func (s *Expression_pairContext) COLON() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserCOLON, 0)
-}
-
-func (s *Expression_pairContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *Expression_pairContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *Expression_pairContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.EnterExpression_pair(s)
-	}
-}
-
-func (s *Expression_pairContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.ExitExpression_pair(s)
-	}
-}
-
-func (s *Expression_pairContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case MonkeyParserVisitor:
-		return t.VisitExpression_pair(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *MonkeyParser) Expression_pair() (localctx IExpression_pairContext) {
-	localctx = NewExpression_pairContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 12, MonkeyParserRULE_expression_pair)
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(119)
-		p.expression(0)
-	}
-	{
-		p.SetState(120)
-		p.Match(MonkeyParserCOLON)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(121)
-		p.expression(0)
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IArray_literalContext is an interface to support dynamic dispatch.
-type IArray_literalContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	LBRACKET() antlr.TerminalNode
-	Expression_list() IExpression_listContext
-	RBRACKET() antlr.TerminalNode
-
-	// IsArray_literalContext differentiates from other interfaces.
-	IsArray_literalContext()
-}
-
-type Array_literalContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyArray_literalContext() *Array_literalContext {
-	var p = new(Array_literalContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_array_literal
-	return p
-}
-
-func InitEmptyArray_literalContext(p *Array_literalContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_array_literal
-}
-
-func (*Array_literalContext) IsArray_literalContext() {}
-
-func NewArray_literalContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Array_literalContext {
-	var p = new(Array_literalContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = MonkeyParserRULE_array_literal
-
-	return p
-}
-
-func (s *Array_literalContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *Array_literalContext) LBRACKET() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserLBRACKET, 0)
-}
-
-func (s *Array_literalContext) Expression_list() IExpression_listContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IExpression_listContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IExpression_listContext)
-}
-
-func (s *Array_literalContext) RBRACKET() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserRBRACKET, 0)
-}
-
-func (s *Array_literalContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *Array_literalContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *Array_literalContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.EnterArray_literal(s)
-	}
-}
-
-func (s *Array_literalContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.ExitArray_literal(s)
-	}
-}
-
-func (s *Array_literalContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case MonkeyParserVisitor:
-		return t.VisitArray_literal(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *MonkeyParser) Array_literal() (localctx IArray_literalContext) {
-	localctx = NewArray_literalContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 14, MonkeyParserRULE_array_literal)
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(123)
-		p.Match(MonkeyParserLBRACKET)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(124)
-		p.Expression_list()
-	}
-	{
-		p.SetState(125)
-		p.Match(MonkeyParserRBRACKET)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IHash_literalContext is an interface to support dynamic dispatch.
-type IHash_literalContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	LBRACE() antlr.TerminalNode
-	RBRACE() antlr.TerminalNode
-	AllExpression_pair() []IExpression_pairContext
-	Expression_pair(i int) IExpression_pairContext
-	AllCOMMA() []antlr.TerminalNode
-	COMMA(i int) antlr.TerminalNode
-
-	// IsHash_literalContext differentiates from other interfaces.
-	IsHash_literalContext()
-}
-
-type Hash_literalContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyHash_literalContext() *Hash_literalContext {
-	var p = new(Hash_literalContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_hash_literal
-	return p
-}
-
-func InitEmptyHash_literalContext(p *Hash_literalContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_hash_literal
-}
-
-func (*Hash_literalContext) IsHash_literalContext() {}
-
-func NewHash_literalContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Hash_literalContext {
-	var p = new(Hash_literalContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = MonkeyParserRULE_hash_literal
-
-	return p
-}
-
-func (s *Hash_literalContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *Hash_literalContext) LBRACE() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserLBRACE, 0)
-}
-
-func (s *Hash_literalContext) RBRACE() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserRBRACE, 0)
-}
-
-func (s *Hash_literalContext) AllExpression_pair() []IExpression_pairContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IExpression_pairContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IExpression_pairContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IExpression_pairContext); ok {
-			tst[i] = t.(IExpression_pairContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *Hash_literalContext) Expression_pair(i int) IExpression_pairContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IExpression_pairContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IExpression_pairContext)
-}
-
-func (s *Hash_literalContext) AllCOMMA() []antlr.TerminalNode {
-	return s.GetTokens(MonkeyParserCOMMA)
-}
-
-func (s *Hash_literalContext) COMMA(i int) antlr.TerminalNode {
-	return s.GetToken(MonkeyParserCOMMA, i)
-}
-
-func (s *Hash_literalContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *Hash_literalContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *Hash_literalContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.EnterHash_literal(s)
-	}
-}
-
-func (s *Hash_literalContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.ExitHash_literal(s)
-	}
-}
-
-func (s *Hash_literalContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case MonkeyParserVisitor:
-		return t.VisitHash_literal(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *MonkeyParser) Hash_literal() (localctx IHash_literalContext) {
-	localctx = NewHash_literalContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 16, MonkeyParserRULE_hash_literal)
-	var _la int
-
-	var _alt int
-
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(127)
-		p.Match(MonkeyParserLBRACE)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	p.SetState(133)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 11, p.GetParserRuleContext())
-	if p.HasError() {
-		goto errorExit
-	}
-	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
-		if _alt == 1 {
-			{
-				p.SetState(128)
-				p.Expression_pair()
-			}
-			{
-				p.SetState(129)
-				p.Match(MonkeyParserCOMMA)
-				if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
-				}
-			}
-
-		}
-		p.SetState(135)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 11, p.GetParserRuleContext())
-		if p.HasError() {
-			goto errorExit
-		}
-	}
-	p.SetState(140)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_la = p.GetTokenStream().LA(1)
-
-	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&5897192454) != 0 {
-		{
-			p.SetState(136)
-			p.Expression_pair()
-		}
-		p.SetState(138)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_la = p.GetTokenStream().LA(1)
-
-		if _la == MonkeyParserCOMMA {
-			{
-				p.SetState(137)
-				p.Match(MonkeyParserCOMMA)
-				if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
-				}
-			}
-
-		}
-
-	}
-	{
-		p.SetState(142)
-		p.Match(MonkeyParserRBRACE)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IFunction_literalContext is an interface to support dynamic dispatch.
-type IFunction_literalContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	FN() antlr.TerminalNode
-	LPAREN() antlr.TerminalNode
-	Params() IParamsContext
-	RPAREN() antlr.TerminalNode
-	Statement() IStatementContext
-
-	// IsFunction_literalContext differentiates from other interfaces.
-	IsFunction_literalContext()
-}
-
-type Function_literalContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyFunction_literalContext() *Function_literalContext {
-	var p = new(Function_literalContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_function_literal
-	return p
-}
-
-func InitEmptyFunction_literalContext(p *Function_literalContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_function_literal
-}
-
-func (*Function_literalContext) IsFunction_literalContext() {}
-
-func NewFunction_literalContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Function_literalContext {
-	var p = new(Function_literalContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = MonkeyParserRULE_function_literal
-
-	return p
-}
-
-func (s *Function_literalContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *Function_literalContext) FN() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserFN, 0)
-}
-
-func (s *Function_literalContext) LPAREN() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserLPAREN, 0)
-}
-
-func (s *Function_literalContext) Params() IParamsContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IParamsContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IParamsContext)
-}
-
-func (s *Function_literalContext) RPAREN() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserRPAREN, 0)
-}
-
-func (s *Function_literalContext) Statement() IStatementContext {
-	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(IStatementContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
 		}
 	}
 
@@ -3379,71 +2899,461 @@ func (s *Function_literalContext) Statement() IStatementContext {
 	return t.(IStatementContext)
 }
 
-func (s *Function_literalContext) GetRuleContext() antlr.RuleContext {
+func (s *CompoundStatementContext) AllEND() []antlr.TerminalNode {
+	return s.GetTokens(MonkeyParserEND)
+}
+
+func (s *CompoundStatementContext) END(i int) antlr.TerminalNode {
+	return s.GetToken(MonkeyParserEND, i)
+}
+
+func (s *CompoundStatementContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *Function_literalContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+func (s *CompoundStatementContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *Function_literalContext) EnterRule(listener antlr.ParseTreeListener) {
+func (s *CompoundStatementContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.EnterFunction_literal(s)
+		listenerT.EnterCompoundStatement(s)
 	}
 }
 
-func (s *Function_literalContext) ExitRule(listener antlr.ParseTreeListener) {
+func (s *CompoundStatementContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.ExitFunction_literal(s)
+		listenerT.ExitCompoundStatement(s)
 	}
 }
 
-func (s *Function_literalContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+func (s *CompoundStatementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 	switch t := visitor.(type) {
 	case MonkeyParserVisitor:
-		return t.VisitFunction_literal(s)
+		return t.VisitCompoundStatement(s)
 
 	default:
 		return t.VisitChildren(s)
 	}
 }
 
-func (p *MonkeyParser) Function_literal() (localctx IFunction_literalContext) {
-	localctx = NewFunction_literalContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 18, MonkeyParserRULE_function_literal)
+func (p *MonkeyParser) CompoundStatement() (localctx ICompoundStatementContext) {
+	localctx = NewCompoundStatementContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 10, MonkeyParserRULE_compoundStatement)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	p.SetState(136)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	for (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&5897192566) != 0 {
+		{
+			p.SetState(130)
+			p.Statement()
+		}
+		p.SetState(132)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+
+		if _la == MonkeyParserEND {
+			{
+				p.SetState(131)
+				p.Match(MonkeyParserEND)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+
+		}
+
+		p.SetState(138)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IExpressionListContext is an interface to support dynamic dispatch.
+type IExpressionListContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	AllExpression() []IExpressionContext
+	Expression(i int) IExpressionContext
+	AllCOMMA() []antlr.TerminalNode
+	COMMA(i int) antlr.TerminalNode
+
+	// IsExpressionListContext differentiates from other interfaces.
+	IsExpressionListContext()
+}
+
+type ExpressionListContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyExpressionListContext() *ExpressionListContext {
+	var p = new(ExpressionListContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MonkeyParserRULE_expressionList
+	return p
+}
+
+func InitEmptyExpressionListContext(p *ExpressionListContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MonkeyParserRULE_expressionList
+}
+
+func (*ExpressionListContext) IsExpressionListContext() {}
+
+func NewExpressionListContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *ExpressionListContext {
+	var p = new(ExpressionListContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = MonkeyParserRULE_expressionList
+
+	return p
+}
+
+func (s *ExpressionListContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *ExpressionListContext) AllExpression() []IExpressionContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IExpressionContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IExpressionContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IExpressionContext); ok {
+			tst[i] = t.(IExpressionContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *ExpressionListContext) Expression(i int) IExpressionContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExpressionContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *ExpressionListContext) AllCOMMA() []antlr.TerminalNode {
+	return s.GetTokens(MonkeyParserCOMMA)
+}
+
+func (s *ExpressionListContext) COMMA(i int) antlr.TerminalNode {
+	return s.GetToken(MonkeyParserCOMMA, i)
+}
+
+func (s *ExpressionListContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *ExpressionListContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *ExpressionListContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(MonkeyParserListener); ok {
+		listenerT.EnterExpressionList(s)
+	}
+}
+
+func (s *ExpressionListContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(MonkeyParserListener); ok {
+		listenerT.ExitExpressionList(s)
+	}
+}
+
+func (s *ExpressionListContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case MonkeyParserVisitor:
+		return t.VisitExpressionList(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *MonkeyParser) ExpressionList() (localctx IExpressionListContext) {
+	localctx = NewExpressionListContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 12, MonkeyParserRULE_expressionList)
+	var _la int
+
+	var _alt int
+
+	p.EnterOuterAlt(localctx, 1)
+	p.SetState(144)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 12, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
+	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
+		if _alt == 1 {
+			{
+				p.SetState(139)
+				p.expression(0)
+			}
+			{
+				p.SetState(140)
+				p.Match(MonkeyParserCOMMA)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+
+		}
+		p.SetState(146)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 12, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
+	}
+	p.SetState(151)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&5897192454) != 0 {
+		{
+			p.SetState(147)
+			p.expression(0)
+		}
+		p.SetState(149)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+
+		if _la == MonkeyParserCOMMA {
+			{
+				p.SetState(148)
+				p.Match(MonkeyParserCOMMA)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+
+		}
+
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IPairContext is an interface to support dynamic dispatch.
+type IPairContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	AllExpression() []IExpressionContext
+	Expression(i int) IExpressionContext
+	COLON() antlr.TerminalNode
+
+	// IsPairContext differentiates from other interfaces.
+	IsPairContext()
+}
+
+type PairContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyPairContext() *PairContext {
+	var p = new(PairContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MonkeyParserRULE_pair
+	return p
+}
+
+func InitEmptyPairContext(p *PairContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = MonkeyParserRULE_pair
+}
+
+func (*PairContext) IsPairContext() {}
+
+func NewPairContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *PairContext {
+	var p = new(PairContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = MonkeyParserRULE_pair
+
+	return p
+}
+
+func (s *PairContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *PairContext) AllExpression() []IExpressionContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IExpressionContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IExpressionContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IExpressionContext); ok {
+			tst[i] = t.(IExpressionContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *PairContext) Expression(i int) IExpressionContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExpressionContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExpressionContext)
+}
+
+func (s *PairContext) COLON() antlr.TerminalNode {
+	return s.GetToken(MonkeyParserCOLON, 0)
+}
+
+func (s *PairContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *PairContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *PairContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(MonkeyParserListener); ok {
+		listenerT.EnterPair(s)
+	}
+}
+
+func (s *PairContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(MonkeyParserListener); ok {
+		listenerT.ExitPair(s)
+	}
+}
+
+func (s *PairContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case MonkeyParserVisitor:
+		return t.VisitPair(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *MonkeyParser) Pair() (localctx IPairContext) {
+	localctx = NewPairContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 14, MonkeyParserRULE_pair)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(144)
-		p.Match(MonkeyParserFN)
+		p.SetState(153)
+		p.expression(0)
+	}
+	{
+		p.SetState(154)
+		p.Match(MonkeyParserCOLON)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
 	{
-		p.SetState(145)
-		p.Match(MonkeyParserLPAREN)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(146)
-		p.Params()
-	}
-	{
-		p.SetState(147)
-		p.Match(MonkeyParserRPAREN)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(148)
-		p.Statement()
+		p.SetState(155)
+		p.expression(0)
 	}
 
 errorExit:
@@ -3556,75 +3466,31 @@ func (s *ParamsContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *MonkeyParser) Params() (localctx IParamsContext) {
 	localctx = NewParamsContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 20, MonkeyParserRULE_params)
+	p.EnterRule(localctx, 16, MonkeyParserRULE_params)
 	var _la int
 
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(154)
+	p.SetState(161)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
 	}
-	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 14, p.GetParserRuleContext())
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 15, p.GetParserRuleContext())
 	if p.HasError() {
 		goto errorExit
 	}
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
 			{
-				p.SetState(150)
+				p.SetState(157)
 				p.Match(MonkeyParserIdentifier)
 				if p.HasError() {
 					// Recognition error - abort rule
 					goto errorExit
 				}
 			}
-			{
-				p.SetState(151)
-				p.Match(MonkeyParserCOMMA)
-				if p.HasError() {
-					// Recognition error - abort rule
-					goto errorExit
-				}
-			}
-
-		}
-		p.SetState(156)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 14, p.GetParserRuleContext())
-		if p.HasError() {
-			goto errorExit
-		}
-	}
-	p.SetState(161)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_la = p.GetTokenStream().LA(1)
-
-	if _la == MonkeyParserIdentifier {
-		{
-			p.SetState(157)
-			p.Match(MonkeyParserIdentifier)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		p.SetState(159)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_la = p.GetTokenStream().LA(1)
-
-		if _la == MonkeyParserCOMMA {
 			{
 				p.SetState(158)
 				p.Match(MonkeyParserCOMMA)
@@ -3635,232 +3501,51 @@ func (p *MonkeyParser) Params() (localctx IParamsContext) {
 			}
 
 		}
-
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IIf_expressionContext is an interface to support dynamic dispatch.
-type IIf_expressionContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	IF() antlr.TerminalNode
-	LPAREN() antlr.TerminalNode
-	Expression() IExpressionContext
-	RPAREN() antlr.TerminalNode
-	AllStatement() []IStatementContext
-	Statement(i int) IStatementContext
-	ELSE() antlr.TerminalNode
-
-	// IsIf_expressionContext differentiates from other interfaces.
-	IsIf_expressionContext()
-}
-
-type If_expressionContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyIf_expressionContext() *If_expressionContext {
-	var p = new(If_expressionContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_if_expression
-	return p
-}
-
-func InitEmptyIf_expressionContext(p *If_expressionContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_if_expression
-}
-
-func (*If_expressionContext) IsIf_expressionContext() {}
-
-func NewIf_expressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *If_expressionContext {
-	var p = new(If_expressionContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = MonkeyParserRULE_if_expression
-
-	return p
-}
-
-func (s *If_expressionContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *If_expressionContext) IF() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserIF, 0)
-}
-
-func (s *If_expressionContext) LPAREN() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserLPAREN, 0)
-}
-
-func (s *If_expressionContext) Expression() IExpressionContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IExpressionContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IExpressionContext)
-}
-
-func (s *If_expressionContext) RPAREN() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserRPAREN, 0)
-}
-
-func (s *If_expressionContext) AllStatement() []IStatementContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IStatementContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IStatementContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IStatementContext); ok {
-			tst[i] = t.(IStatementContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *If_expressionContext) Statement(i int) IStatementContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IStatementContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IStatementContext)
-}
-
-func (s *If_expressionContext) ELSE() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserELSE, 0)
-}
-
-func (s *If_expressionContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *If_expressionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *If_expressionContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.EnterIf_expression(s)
-	}
-}
-
-func (s *If_expressionContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.ExitIf_expression(s)
-	}
-}
-
-func (s *If_expressionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case MonkeyParserVisitor:
-		return t.VisitIf_expression(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *MonkeyParser) If_expression() (localctx IIf_expressionContext) {
-	localctx = NewIf_expressionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 22, MonkeyParserRULE_if_expression)
-	p.EnterOuterAlt(localctx, 1)
-	{
 		p.SetState(163)
-		p.Match(MonkeyParserIF)
+		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
-			// Recognition error - abort rule
+			goto errorExit
+		}
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 15, p.GetParserRuleContext())
+		if p.HasError() {
 			goto errorExit
 		}
 	}
-	{
-		p.SetState(164)
-		p.Match(MonkeyParserLPAREN)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(165)
-		p.expression(0)
-	}
-	{
-		p.SetState(166)
-		p.Match(MonkeyParserRPAREN)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(167)
-		p.Statement()
-	}
-	p.SetState(170)
+	p.SetState(168)
 	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
 
-	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 17, p.GetParserRuleContext()) == 1 {
+	if _la == MonkeyParserIdentifier {
 		{
-			p.SetState(168)
-			p.Match(MonkeyParserELSE)
+			p.SetState(164)
+			p.Match(MonkeyParserIdentifier)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		{
-			p.SetState(169)
-			p.Statement()
+		p.SetState(166)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
+
+		if _la == MonkeyParserCOMMA {
+			{
+				p.SetState(165)
+				p.Match(MonkeyParserCOMMA)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
+			}
+
 		}
 
-	} else if p.HasError() { // JIM
-		goto errorExit
 	}
 
 errorExit:
@@ -3876,169 +3561,8 @@ errorExit:
 	goto errorExit // Trick to prevent compiler error if the label is not used
 }
 
-// ICall_expressionContext is an interface to support dynamic dispatch.
-type ICall_expressionContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	Identifier() IIdentifierContext
-	LPAREN() antlr.TerminalNode
-	Expression_list() IExpression_listContext
-	RPAREN() antlr.TerminalNode
-
-	// IsCall_expressionContext differentiates from other interfaces.
-	IsCall_expressionContext()
-}
-
-type Call_expressionContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyCall_expressionContext() *Call_expressionContext {
-	var p = new(Call_expressionContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_call_expression
-	return p
-}
-
-func InitEmptyCall_expressionContext(p *Call_expressionContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_call_expression
-}
-
-func (*Call_expressionContext) IsCall_expressionContext() {}
-
-func NewCall_expressionContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Call_expressionContext {
-	var p = new(Call_expressionContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = MonkeyParserRULE_call_expression
-
-	return p
-}
-
-func (s *Call_expressionContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *Call_expressionContext) Identifier() IIdentifierContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IIdentifierContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IIdentifierContext)
-}
-
-func (s *Call_expressionContext) LPAREN() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserLPAREN, 0)
-}
-
-func (s *Call_expressionContext) Expression_list() IExpression_listContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IExpression_listContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IExpression_listContext)
-}
-
-func (s *Call_expressionContext) RPAREN() antlr.TerminalNode {
-	return s.GetToken(MonkeyParserRPAREN, 0)
-}
-
-func (s *Call_expressionContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *Call_expressionContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *Call_expressionContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.EnterCall_expression(s)
-	}
-}
-
-func (s *Call_expressionContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.ExitCall_expression(s)
-	}
-}
-
-func (s *Call_expressionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case MonkeyParserVisitor:
-		return t.VisitCall_expression(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *MonkeyParser) Call_expression() (localctx ICall_expressionContext) {
-	localctx = NewCall_expressionContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 24, MonkeyParserRULE_call_expression)
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(172)
-		p.Identifier()
-	}
-	{
-		p.SetState(173)
-		p.Match(MonkeyParserLPAREN)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	{
-		p.SetState(174)
-		p.Expression_list()
-	}
-	{
-		p.SetState(175)
-		p.Match(MonkeyParserRPAREN)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// ILet_statementContext is an interface to support dynamic dispatch.
-type ILet_statementContext interface {
+// ILetContext is an interface to support dynamic dispatch.
+type ILetContext interface {
 	antlr.ParserRuleContext
 
 	// GetParser returns the parser.
@@ -4057,52 +3581,52 @@ type ILet_statementContext interface {
 	END() antlr.TerminalNode
 	ASSIGN() antlr.TerminalNode
 
-	// IsLet_statementContext differentiates from other interfaces.
-	IsLet_statementContext()
+	// IsLetContext differentiates from other interfaces.
+	IsLetContext()
 }
 
-type Let_statementContext struct {
+type LetContext struct {
 	antlr.BaseParserRuleContext
 	parser antlr.Parser
 	op     antlr.Token
 }
 
-func NewEmptyLet_statementContext() *Let_statementContext {
-	var p = new(Let_statementContext)
+func NewEmptyLetContext() *LetContext {
+	var p = new(LetContext)
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_let_statement
+	p.RuleIndex = MonkeyParserRULE_let
 	return p
 }
 
-func InitEmptyLet_statementContext(p *Let_statementContext) {
+func InitEmptyLetContext(p *LetContext) {
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = MonkeyParserRULE_let_statement
+	p.RuleIndex = MonkeyParserRULE_let
 }
 
-func (*Let_statementContext) IsLet_statementContext() {}
+func (*LetContext) IsLetContext() {}
 
-func NewLet_statementContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *Let_statementContext {
-	var p = new(Let_statementContext)
+func NewLetContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *LetContext {
+	var p = new(LetContext)
 
 	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
 
 	p.parser = parser
-	p.RuleIndex = MonkeyParserRULE_let_statement
+	p.RuleIndex = MonkeyParserRULE_let
 
 	return p
 }
 
-func (s *Let_statementContext) GetParser() antlr.Parser { return s.parser }
+func (s *LetContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *Let_statementContext) GetOp() antlr.Token { return s.op }
+func (s *LetContext) GetOp() antlr.Token { return s.op }
 
-func (s *Let_statementContext) SetOp(v antlr.Token) { s.op = v }
+func (s *LetContext) SetOp(v antlr.Token) { s.op = v }
 
-func (s *Let_statementContext) LET() antlr.TerminalNode {
+func (s *LetContext) LET() antlr.TerminalNode {
 	return s.GetToken(MonkeyParserLET, 0)
 }
 
-func (s *Let_statementContext) Identifier() IIdentifierContext {
+func (s *LetContext) Identifier() IIdentifierContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(IIdentifierContext); ok {
@@ -4118,7 +3642,7 @@ func (s *Let_statementContext) Identifier() IIdentifierContext {
 	return t.(IIdentifierContext)
 }
 
-func (s *Let_statementContext) Expression() IExpressionContext {
+func (s *LetContext) Expression() IExpressionContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(IExpressionContext); ok {
@@ -4134,50 +3658,50 @@ func (s *Let_statementContext) Expression() IExpressionContext {
 	return t.(IExpressionContext)
 }
 
-func (s *Let_statementContext) END() antlr.TerminalNode {
+func (s *LetContext) END() antlr.TerminalNode {
 	return s.GetToken(MonkeyParserEND, 0)
 }
 
-func (s *Let_statementContext) ASSIGN() antlr.TerminalNode {
+func (s *LetContext) ASSIGN() antlr.TerminalNode {
 	return s.GetToken(MonkeyParserASSIGN, 0)
 }
 
-func (s *Let_statementContext) GetRuleContext() antlr.RuleContext {
+func (s *LetContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *Let_statementContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+func (s *LetContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *Let_statementContext) EnterRule(listener antlr.ParseTreeListener) {
+func (s *LetContext) EnterRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.EnterLet_statement(s)
+		listenerT.EnterLet(s)
 	}
 }
 
-func (s *Let_statementContext) ExitRule(listener antlr.ParseTreeListener) {
+func (s *LetContext) ExitRule(listener antlr.ParseTreeListener) {
 	if listenerT, ok := listener.(MonkeyParserListener); ok {
-		listenerT.ExitLet_statement(s)
+		listenerT.ExitLet(s)
 	}
 }
 
-func (s *Let_statementContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+func (s *LetContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 	switch t := visitor.(type) {
 	case MonkeyParserVisitor:
-		return t.VisitLet_statement(s)
+		return t.VisitLet(s)
 
 	default:
 		return t.VisitChildren(s)
 	}
 }
 
-func (p *MonkeyParser) Let_statement() (localctx ILet_statementContext) {
-	localctx = NewLet_statementContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 26, MonkeyParserRULE_let_statement)
+func (p *MonkeyParser) Let() (localctx ILetContext) {
+	localctx = NewLetContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 18, MonkeyParserRULE_let)
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(177)
+		p.SetState(170)
 		p.Match(MonkeyParserLET)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -4185,26 +3709,26 @@ func (p *MonkeyParser) Let_statement() (localctx ILet_statementContext) {
 		}
 	}
 	{
-		p.SetState(178)
+		p.SetState(171)
 		p.Identifier()
 	}
 	{
-		p.SetState(179)
+		p.SetState(172)
 
 		var _m = p.Match(MonkeyParserASSIGN)
 
-		localctx.(*Let_statementContext).op = _m
+		localctx.(*LetContext).op = _m
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
 		}
 	}
 	{
-		p.SetState(180)
+		p.SetState(173)
 		p.expression(0)
 	}
 	{
-		p.SetState(181)
+		p.SetState(174)
 		p.Match(MonkeyParserEND)
 		if p.HasError() {
 			// Recognition error - abort rule

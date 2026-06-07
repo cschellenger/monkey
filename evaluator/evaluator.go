@@ -75,19 +75,17 @@ func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
 		env.Set(node.Identifier().GetText(), val)
 
 	case *parser.FunctionExpressionContext:
-		lit := node.Function_literal()
-		params := lit.Params()
-		body := lit.Statement()
+		params := node.Params()
+		body := node.CompoundStatement()
 		return &object.Function{Parameters: params, Env: env, Body: body}
 
 	case *parser.CallExpressionContext:
-		call := node.Call_expression()
-		ident := call.Identifier()
+		ident := node.Identifier()
 		function := evalIdentifier(ident, env)
 		if isError(function) {
 			return function
 		}
-		args := evalExpressions(call.Expression_list(), env)
+		args := evalExpressions(node.ExpressionList(), env)
 		if len(args) == 1 && isError(args[0]) {
 			return args[0]
 		}
@@ -109,7 +107,7 @@ func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
 		return evalWhileLoop(node, env)
 
 	case *parser.ArrayLiteralExpressionContext:
-		elements := evalExpressions(node.Array_literal().Expression_list(), env)
+		elements := evalExpressions(node.ExpressionList(), env)
 		if len(elements) == 1 && isError(elements[0]) {
 			return elements[0]
 		}
@@ -203,7 +201,7 @@ func unwrapReturnValue(obj object.Object) object.Object {
 }
 
 func evalExpressions(
-	exps parser.IExpression_listContext,
+	exps parser.IExpressionListContext,
 	env *object.Environment,
 ) []object.Object {
 	var result []object.Object
@@ -411,7 +409,7 @@ func evalWhileLoop(wl *parser.WhileStatementContext, env *object.Environment) ob
 		if !keepGoing {
 			break
 		}
-		retVal = Eval(wl.Statement(), env)
+		retVal = Eval(wl.CompoundStatement(), env)
 		if retVal.Type() == object.RETURN_VALUE_OBJ {
 			break
 		}
@@ -420,16 +418,15 @@ func evalWhileLoop(wl *parser.WhileStatementContext, env *object.Environment) ob
 }
 
 func evalIfExpression(ie *parser.IfExpressionContext, env *object.Environment) object.Object {
-	if_exp := ie.If_expression()
-	condition := Eval(if_exp.Expression(), env)
+	condition := Eval(ie.Expression(), env)
 	if isError(condition) {
 		return condition
 	}
 
 	if isTruthy(condition) {
-		return Eval(if_exp.Statement(0), env)
-	} else if if_exp.ELSE() != nil {
-		return Eval(if_exp.Statement(1), env)
+		return Eval(ie.CompoundStatement(0), env)
+	} else if ie.ELSE() != nil {
+		return Eval(ie.CompoundStatement(1), env)
 	} else {
 		return NULL
 	}
@@ -477,7 +474,7 @@ func evalHashLiteral(
 ) object.Object {
 	pairs := make(map[object.HashKey]object.HashPair)
 
-	for _, pairNode := range node.Hash_literal().AllExpression_pair() {
+	for _, pairNode := range node.AllPair() {
 		key := Eval(pairNode.Expression(0), env)
 		if isError(key) {
 			return key
