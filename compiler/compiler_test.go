@@ -26,6 +26,17 @@ func TestIntegerArithmetic(t *testing.T) {
 				code.Make(code.OpConstant, 0),
 				code.Make(code.OpConstant, 1),
 				code.Make(code.OpAdd),
+				code.Make(code.OpPop),
+			},
+		},
+		{
+			input:             "3; 2",
+			expectedConstants: []any{3, 2},
+			expectedInstructions: []code.Instructions{
+				code.Make(code.OpConstant, 0),
+				code.Make(code.OpPop),
+				code.Make(code.OpConstant, 1),
+				code.Make(code.OpPop),
 			},
 		},
 	}
@@ -103,7 +114,7 @@ func concatInstructions(s []code.Instructions) code.Instructions {
 
 func testConstants(
 	t *testing.T,
-	expected []interface{},
+	expected []any,
 	actual []object.Object,
 ) error {
 	if len(expected) != len(actual) {

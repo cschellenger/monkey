@@ -34,6 +34,7 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 		if err := c.Compile(node.Expression()); err != nil {
 			return err
 		}
+		c.emit(code.OpPop)
 
 	case *parser.StarSlashExpressionContext:
 		return c.compileInfixExpression(node)
