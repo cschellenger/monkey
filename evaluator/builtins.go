@@ -3,6 +3,7 @@ package evaluator
 import (
 	"fmt"
 
+	"github.com/cschellenger/monkey/common"
 	"github.com/cschellenger/monkey/object"
 )
 
@@ -10,7 +11,7 @@ var builtins = map[string]*object.Builtin{
 	"len": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
-				return newError("wrong number of arguments. got=%d, want=1",
+				return common.NewError("wrong number of arguments. got=%d, want=1",
 					len(args))
 			}
 
@@ -20,7 +21,7 @@ var builtins = map[string]*object.Builtin{
 			case *object.Array:
 				return &object.Integer{Value: int64(len(arg.Elements))}
 			default:
-				return newError("argument to `len` not supported, got %s",
+				return common.NewError("argument to `len` not supported, got %s",
 					args[0].Type())
 			}
 		},
@@ -28,11 +29,11 @@ var builtins = map[string]*object.Builtin{
 	"first": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
-				return newError("wrong number of arguments. got=%d, want=1",
+				return common.NewError("wrong number of arguments. got=%d, want=1",
 					len(args))
 			}
 			if args[0].Type() != object.ARRAY_OBJ {
-				return newError("argument to `first` must be ARRAY, got %s",
+				return common.NewError("argument to `first` must be ARRAY, got %s",
 					args[0].Type())
 			}
 
@@ -41,17 +42,17 @@ var builtins = map[string]*object.Builtin{
 				return arr.Elements[0]
 			}
 
-			return NULL
+			return common.NULL
 		},
 	},
 	"last": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
-				return newError("wrong number of arguments. got=%d, want=1",
+				return common.NewError("wrong number of arguments. got=%d, want=1",
 					len(args))
 			}
 			if args[0].Type() != object.ARRAY_OBJ {
-				return newError("argument to `last` must be ARRAY, got %s",
+				return common.NewError("argument to `last` must be ARRAY, got %s",
 					args[0].Type())
 			}
 
@@ -61,17 +62,17 @@ var builtins = map[string]*object.Builtin{
 				return arr.Elements[length-1]
 			}
 
-			return NULL
+			return common.NULL
 		},
 	},
 	"rest": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
-				return newError("wrong number of arguments. got=%d, want=1",
+				return common.NewError("wrong number of arguments. got=%d, want=1",
 					len(args))
 			}
 			if args[0].Type() != object.ARRAY_OBJ {
-				return newError("argument to `rest` must be ARRAY, got %s",
+				return common.NewError("argument to `rest` must be ARRAY, got %s",
 					args[0].Type())
 			}
 
@@ -83,17 +84,17 @@ var builtins = map[string]*object.Builtin{
 				return &object.Array{Elements: newElements}
 			}
 
-			return NULL
+			return common.NULL
 		},
 	},
 	"push": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 2 {
-				return newError("wrong number of arguments. got=%d, want=2",
+				return common.NewError("wrong number of arguments. got=%d, want=2",
 					len(args))
 			}
 			if args[0].Type() != object.ARRAY_OBJ {
-				return newError("argument to `push` must be ARRAY, got %s",
+				return common.NewError("argument to `push` must be ARRAY, got %s",
 					args[0].Type())
 			}
 
@@ -113,7 +114,7 @@ var builtins = map[string]*object.Builtin{
 				fmt.Println(arg.Inspect())
 			}
 
-			return NULL
+			return common.NULL
 		},
 	},
 }

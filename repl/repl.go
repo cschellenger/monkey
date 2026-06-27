@@ -1,13 +1,15 @@
 package repl
 
 import (
+	"fmt"
 	"io"
 	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
-	"github.com/cschellenger/monkey/evaluator"
-	"github.com/cschellenger/monkey/object"
+	"github.com/cschellenger/monkey/common"
+	"github.com/cschellenger/monkey/compiler"
 	"github.com/cschellenger/monkey/parser"
+	"github.com/cschellenger/monkey/vm"
 
 	"github.com/chzyer/readline"
 )
@@ -53,7 +55,7 @@ func Start(in io.Reader, out io.Writer) {
 	defer rl.Close()
 	rl.CaptureExitSignal()
 
-	env := object.NewEnvironment()
+	// env := object.NewEnvironment()
 
 	for {
 		line, err := rl.Readline()
@@ -72,7 +74,7 @@ func Start(in io.Reader, out io.Writer) {
 		l := parser.NewMonkeyLexer(input)
 		stream := antlr.NewCommonTokenStream(l, 0)
 		p := parser.NewMonkeyParser(stream)
-		errListener := evaluator.NewErrListener()
+		errListener := common.NewErrListener()
 		p.AddErrorListener(errListener)
 
 		program := p.Prog()
@@ -81,11 +83,30 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
+		/* old evaluator path
 		evaluated := evaluator.Eval(program, env)
 		if evaluated != nil {
 			io.WriteString(out, evaluated.Inspect())
 			io.WriteString(out, "\n")
 		}
+		*/
+		comp := compiler.New()
+		err = comp.Compile(program)
+		if err != nil {
+			fmt.Fprintf(out, "Woops! Compilation failed:\n %s\n", err)
+			continue
+		}
+
+		machine := vm.New(comp.Bytecode())
+		err = machine.Run()
+		if err != nil {
+			fmt.Fprintf(out, "Woops! Executing bytecode failed:\n %s\n", err)
+			continue
+		}
+
+		stackTop := machine.StackTop()
+		io.WriteString(out, stackTop.Inspect())
+		io.WriteString(out, "\n")
 	}
 }
 

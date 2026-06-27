@@ -1,41 +1,11 @@
 package evaluator
 
 import (
-	"fmt"
-	"strconv"
-
 	"github.com/antlr4-go/antlr/v4"
+	"github.com/cschellenger/monkey/common"
 	"github.com/cschellenger/monkey/object"
 	"github.com/cschellenger/monkey/parser"
 )
-
-var (
-	TRUE  = &object.Boolean{Value: true}
-	FALSE = &object.Boolean{Value: false}
-	NULL  = &object.Null{}
-)
-
-type MonkeyErrListener struct {
-	Errors []string
-}
-
-func NewErrListener() *MonkeyErrListener {
-	return &MonkeyErrListener{Errors: make([]string, 0)}
-}
-
-func (mel *MonkeyErrListener) SyntaxError(recognizer antlr.Recognizer, offendingSymbol interface{}, line, column int, msg string, e antlr.RecognitionException) {
-	mel.Errors = append(mel.Errors, msg)
-}
-
-func (mel *MonkeyErrListener) ReportAmbiguity(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, exact bool, ambigAlts *antlr.BitSet, configs *antlr.ATNConfigSet) {
-	//fmt.Printf("Got ambiguity\n")
-}
-func (mel *MonkeyErrListener) ReportAttemptingFullContext(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, conflictingAlts *antlr.BitSet, configs *antlr.ATNConfigSet) {
-	//fmt.Printf("Got attempting full context\n")
-}
-func (mel *MonkeyErrListener) ReportContextSensitivity(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex, prediction int, configs *antlr.ATNConfigSet) {
-	//fmt.Printf("Got context sensitivity\n")
-}
 
 func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
 	switch node := node.(type) {
@@ -58,7 +28,7 @@ func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
 		if isError(right) {
 			return right
 		}
-		return evalBangOperatorExpression(right)
+		return common.EvalBangOperatorExpression(right)
 
 	case *parser.StarSlashExpressionContext:
 		return evalInfixExpression(node, env)
@@ -101,7 +71,7 @@ func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
 		return evalIfExpression(node, env)
 
 	case *parser.LiteralExpressionContext:
-		return evalLiteralExpression(node)
+		return common.EvalLiteralExpression(node)
 
 	case *parser.WhileStatementContext:
 		return evalWhileLoop(node, env)
@@ -131,7 +101,7 @@ func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
 		return Eval(node.Expression(), env)
 
 	case nil:
-		return NULL
+		return common.NULL
 	}
 
 	return nil
@@ -148,38 +118,8 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 		return fn.Fn(args...)
 
 	default:
-		return newError("not a function: %s", fn.Type())
+		return common.NewError("not a function: %s", fn.Type())
 	}
-}
-
-func evalLiteralExpression(le *parser.LiteralExpressionContext) object.Object {
-	lit := le.Literal()
-	booleanLit := lit.BooleanLiteral()
-	if booleanLit != nil {
-		return nativeBoolToBooleanObject(booleanLit.GetText() == "true")
-	}
-	integerLit := lit.IntegerLiteral()
-	if integerLit != nil {
-		value, err := strconv.ParseInt(integerLit.GetText(), 0, 64)
-		if err != nil {
-			return newError("could not parse %s as integer", integerLit.GetText())
-		}
-		return &object.Integer{Value: value}
-	}
-	floatLit := lit.FloatLiteral()
-	if floatLit != nil {
-		value, err := strconv.ParseFloat(floatLit.GetText(), 64)
-		if err != nil {
-			return newError("could not parse %q as float", floatLit.GetText())
-		}
-		return &object.Float{Value: value}
-	}
-	stringLit := lit.StringLiteral()
-	if stringLit != nil {
-		rawText := stringLit.GetText()
-		return &object.String{Value: rawText[1 : len(rawText)-1]}
-	}
-	return newError("unexpected literal: %s", lit.GetText())
 }
 
 func extendFunctionEnv(
@@ -228,7 +168,7 @@ func evalIdentifier(
 		return builtin
 	}
 
-	return newError("identifier not found: %s", identifier)
+	return common.NewError("identifier not found: %s", identifier)
 }
 
 func evalProgram(program parser.IProgContext, env *object.Environment) object.Object {
@@ -263,28 +203,8 @@ func evalBlockStatement(block *parser.CompoundStatementContext, env *object.Envi
 	return result
 }
 
-func nativeBoolToBooleanObject(input bool) *object.Boolean {
-	if input {
-		return TRUE
-	}
-	return FALSE
-}
-
-func evalBangOperatorExpression(right object.Object) object.Object {
-	switch right {
-	case TRUE:
-		return FALSE
-	case FALSE:
-		return TRUE
-	case NULL:
-		return TRUE
-	default:
-		return FALSE
-	}
-}
-
 func evalInfixExpression(
-	node InfixExpression,
+	node common.InfixExpression,
 	env *object.Environment,
 ) object.Object {
 	left := Eval(node.Expression(0), env)
@@ -324,15 +244,15 @@ func evalInfixExpression(
 	case operator == "==":
 		leftEquals, ok := left.(object.OperatorEquals)
 		if ok {
-			return nativeBoolToBooleanObject(left == right || leftEquals.Equals(right))
+			return common.NativeBoolToBooleanObject(left == right || leftEquals.Equals(right))
 		}
-		return nativeBoolToBooleanObject(left == right)
+		return common.NativeBoolToBooleanObject(left == right)
 	case operator == "!=":
 		leftEquals, ok := left.(object.OperatorEquals)
 		if ok {
-			return nativeBoolToBooleanObject(left != right && !leftEquals.Equals(right))
+			return common.NativeBoolToBooleanObject(left != right && !leftEquals.Equals(right))
 		}
-		return nativeBoolToBooleanObject(left != right)
+		return common.NativeBoolToBooleanObject(left != right)
 	case operator == ">=":
 		return evalComparable(left, right, operator, compareGreaterEquals)
 	case operator == ">":
@@ -344,10 +264,10 @@ func evalInfixExpression(
 	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
 		return evalStringInfixExpression(operator, left, right)
 	case left.Type() != right.Type():
-		return newError("type mismatch: %s %s %s",
+		return common.NewError("type mismatch: %s %s %s",
 			left.Type(), operator, right.Type())
 	default:
-		return newError("unknown operator: %s %s %s",
+		return common.NewError("unknown operator: %s %s %s",
 			left.Type(), operator, right.Type())
 	}
 }
@@ -379,7 +299,7 @@ func evalComparable(
 		if err != nil {
 			return err
 		}
-		return nativeBoolToBooleanObject(comparison(result))
+		return common.NativeBoolToBooleanObject(comparison(result))
 	}
 	return object.UnsupportedOperation(left.Type(), operator, right.Type())
 }
@@ -389,7 +309,7 @@ func evalStringInfixExpression(
 	left, right object.Object,
 ) object.Object {
 	if operator != "+" {
-		return newError("unknown operator: %s %s %s",
+		return common.NewError("unknown operator: %s %s %s",
 			left.Type(), operator, right.Type())
 	}
 	leftVal := left.(*object.String).Value
@@ -399,7 +319,7 @@ func evalStringInfixExpression(
 
 func evalWhileLoop(wl *parser.WhileStatementContext, env *object.Environment) object.Object {
 	keepGoing := true
-	var retVal object.Object = NULL
+	var retVal object.Object = common.NULL
 	for keepGoing {
 		condition := Eval(wl.Expression(), env)
 		if isError(condition) {
@@ -428,7 +348,7 @@ func evalIfExpression(ie *parser.IfExpressionContext, env *object.Environment) o
 	} else if ie.ELSE() != nil {
 		return Eval(ie.CompoundStatement(1), env)
 	} else {
-		return NULL
+		return common.NULL
 	}
 }
 
@@ -439,7 +359,7 @@ func evalIndexExpression(left, index object.Object) object.Object {
 	case left.Type() == object.HASH_OBJ:
 		return evalHashIndexExpression(left, index)
 	default:
-		return newError("index operator not supported: %s", left.Type())
+		return common.NewError("index operator not supported: %s", left.Type())
 	}
 }
 
@@ -449,7 +369,7 @@ func evalArrayIndexExpression(array, index object.Object) object.Object {
 	max := int64(len(arrayObject.Elements) - 1)
 
 	if idx < 0 || idx > max {
-		return NULL
+		return common.NULL
 	}
 
 	return arrayObject.Elements[idx]
@@ -459,11 +379,11 @@ func evalHashIndexExpression(hash, index object.Object) object.Object {
 	hashObject := hash.(*object.Hash)
 	key, ok := index.(object.Hashable)
 	if !ok {
-		return newError("unusable as hash key: %s", index.Type())
+		return common.NewError("unusable as hash key: %s", index.Type())
 	}
 	pair, ok := hashObject.Pairs[key.HashKey()]
 	if !ok {
-		return NULL
+		return common.NULL
 	}
 	return pair.Value
 }
@@ -481,7 +401,7 @@ func evalHashLiteral(
 		}
 		hashKey, ok := key.(object.Hashable)
 		if !ok {
-			return newError("unusable as hash key: %s", key.Type())
+			return common.NewError("unusable as hash key: %s", key.Type())
 		}
 		val := Eval(pairNode.Expression(1), env)
 		if isError(val) {
@@ -495,19 +415,15 @@ func evalHashLiteral(
 
 func isTruthy(obj object.Object) bool {
 	switch obj {
-	case NULL:
+	case common.NULL:
 		return false
-	case TRUE:
+	case common.TRUE:
 		return true
-	case FALSE:
+	case common.FALSE:
 		return false
 	default:
 		return true
 	}
-}
-
-func newError(format string, a ...any) *object.Error {
-	return &object.Error{Message: fmt.Sprintf(format, a...)}
 }
 
 func isError(obj object.Object) bool {
@@ -524,10 +440,5 @@ func errOrResult(res object.Object, err *object.Error) object.Object {
 	if res != nil {
 		return res
 	}
-	return NULL
-}
-
-type InfixExpression interface {
-	Expression(i int) parser.IExpressionContext
-	GetOp() antlr.Token
+	return common.NULL
 }

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/antlr4-go/antlr/v4"
+	"github.com/cschellenger/monkey/common"
 	"github.com/cschellenger/monkey/object"
 	"github.com/cschellenger/monkey/parser"
 )
@@ -41,7 +42,7 @@ func testEval(input string) object.Object {
 	l := parser.NewMonkeyLexer(antlr_input)
 	stream := antlr.NewCommonTokenStream(l, 0)
 	p := parser.NewMonkeyParser(stream)
-	errListener := NewErrListener()
+	errListener := common.NewErrListener()
 	p.AddErrorListener(errListener)
 	program := p.Prog()
 	if len(errListener.Errors) == 0 {
@@ -197,7 +198,7 @@ func TestWhileLoop(t *testing.T) {
 }
 
 func testNullObject(t *testing.T, obj object.Object, input string) bool {
-	if obj != NULL {
+	if obj != common.NULL {
 		t.Errorf("object is not NULL. got=%T (%+v), input='%s'", obj, obj, input)
 		return false
 	}
@@ -537,8 +538,8 @@ func TestHashLiterals(t *testing.T) {
 		(&object.String{Value: "two"}).HashKey():   2,
 		(&object.String{Value: "three"}).HashKey(): 3,
 		(&object.Integer{Value: 4}).HashKey():      4,
-		TRUE.HashKey():                             5,
-		FALSE.HashKey():                            6,
+		common.TRUE.HashKey():                      5,
+		common.FALSE.HashKey():                     6,
 	}
 
 	if len(result.Pairs) != len(expected) {
