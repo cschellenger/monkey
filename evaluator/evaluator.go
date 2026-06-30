@@ -1,10 +1,18 @@
 package evaluator
 
 import (
+	"strconv"
+
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/cschellenger/monkey/common"
 	"github.com/cschellenger/monkey/object"
 	"github.com/cschellenger/monkey/parser"
+)
+
+var (
+	TRUE  = &object.Boolean{Value: true}
+	FALSE = &object.Boolean{Value: false}
+	NULL  = &object.Null{}
 )
 
 func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
@@ -28,7 +36,7 @@ func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
 		if isError(right) {
 			return right
 		}
-		return common.EvalBangOperatorExpression(right)
+		return evalBangOperatorExpression(right)
 
 	case *parser.StarSlashExpressionContext:
 		return evalInfixExpression(node, env)
@@ -71,7 +79,7 @@ func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
 		return evalIfExpression(node, env)
 
 	case *parser.LiteralExpressionContext:
-		return common.EvalLiteralExpression(node)
+		return evalLiteralExpression(node)
 
 	case *parser.WhileStatementContext:
 		return evalWhileLoop(node, env)
@@ -101,7 +109,7 @@ func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
 		return Eval(node.Expression(), env)
 
 	case nil:
-		return common.NULL
+		return NULL
 	}
 
 	return nil
@@ -244,15 +252,15 @@ func evalInfixExpression(
 	case operator == "==":
 		leftEquals, ok := left.(object.OperatorEquals)
 		if ok {
-			return common.NativeBoolToBooleanObject(left == right || leftEquals.Equals(right))
+			return NativeBoolToBooleanObject(left == right || leftEquals.Equals(right))
 		}
-		return common.NativeBoolToBooleanObject(left == right)
+		return NativeBoolToBooleanObject(left == right)
 	case operator == "!=":
 		leftEquals, ok := left.(object.OperatorEquals)
 		if ok {
-			return common.NativeBoolToBooleanObject(left != right && !leftEquals.Equals(right))
+			return NativeBoolToBooleanObject(left != right && !leftEquals.Equals(right))
 		}
-		return common.NativeBoolToBooleanObject(left != right)
+		return NativeBoolToBooleanObject(left != right)
 	case operator == ">=":
 		return evalComparable(left, right, operator, compareGreaterEquals)
 	case operator == ">":
@@ -299,7 +307,7 @@ func evalComparable(
 		if err != nil {
 			return err
 		}
-		return common.NativeBoolToBooleanObject(comparison(result))
+		return NativeBoolToBooleanObject(comparison(result))
 	}
 	return object.UnsupportedOperation(left.Type(), operator, right.Type())
 }
@@ -319,7 +327,7 @@ func evalStringInfixExpression(
 
 func evalWhileLoop(wl *parser.WhileStatementContext, env *object.Environment) object.Object {
 	keepGoing := true
-	var retVal object.Object = common.NULL
+	var retVal object.Object = NULL
 	for keepGoing {
 		condition := Eval(wl.Expression(), env)
 		if isError(condition) {
@@ -348,7 +356,7 @@ func evalIfExpression(ie *parser.IfExpressionContext, env *object.Environment) o
 	} else if ie.ELSE() != nil {
 		return Eval(ie.CompoundStatement(1), env)
 	} else {
-		return common.NULL
+		return NULL
 	}
 }
 
@@ -369,7 +377,7 @@ func evalArrayIndexExpression(array, index object.Object) object.Object {
 	max := int64(len(arrayObject.Elements) - 1)
 
 	if idx < 0 || idx > max {
-		return common.NULL
+		return NULL
 	}
 
 	return arrayObject.Elements[idx]
@@ -383,7 +391,7 @@ func evalHashIndexExpression(hash, index object.Object) object.Object {
 	}
 	pair, ok := hashObject.Pairs[key.HashKey()]
 	if !ok {
-		return common.NULL
+		return NULL
 	}
 	return pair.Value
 }
@@ -415,11 +423,11 @@ func evalHashLiteral(
 
 func isTruthy(obj object.Object) bool {
 	switch obj {
-	case common.NULL:
+	case NULL:
 		return false
-	case common.TRUE:
+	case TRUE:
 		return true
-	case common.FALSE:
+	case FALSE:
 		return false
 	default:
 		return true
@@ -440,5 +448,55 @@ func errOrResult(res object.Object, err *object.Error) object.Object {
 	if res != nil {
 		return res
 	}
-	return common.NULL
+	return NULL
+}
+
+func evalLiteralExpression(le *parser.LiteralExpressionContext) object.Object {
+	lit := le.Literal()
+	booleanLit := lit.BooleanLiteral()
+	if booleanLit != nil {
+		return NativeBoolToBooleanObject(booleanLit.GetSymbol().GetText() == "true")
+	}
+	integerLit := lit.IntegerLiteral()
+	if integerLit != nil {
+		value, err := strconv.ParseInt(integerLit.GetSymbol().GetText(), 0, 64)
+		if err != nil {
+			return common.NewError("could not parse %s as integer", integerLit.GetText())
+		}
+		return &object.Integer{Value: value}
+	}
+	floatLit := lit.FloatLiteral()
+	if floatLit != nil {
+		value, err := strconv.ParseFloat(floatLit.GetSymbol().GetText(), 64)
+		if err != nil {
+			return common.NewError("could not parse %q as float", floatLit.GetText())
+		}
+		return &object.Float{Value: value}
+	}
+	stringLit := lit.StringLiteral()
+	if stringLit != nil {
+		rawText := stringLit.GetSymbol().GetText()
+		return &object.String{Value: rawText[1 : len(rawText)-1]}
+	}
+	return common.NewError("unexpected literal: %s", lit.GetText())
+}
+
+func NativeBoolToBooleanObject(input bool) *object.Boolean {
+	if input {
+		return TRUE
+	}
+	return FALSE
+}
+
+func evalBangOperatorExpression(right object.Object) object.Object {
+	switch right {
+	case TRUE:
+		return FALSE
+	case FALSE:
+		return TRUE
+	case NULL:
+		return TRUE
+	default:
+		return FALSE
+	}
 }

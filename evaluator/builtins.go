@@ -42,7 +42,7 @@ var builtins = map[string]*object.Builtin{
 				return arr.Elements[0]
 			}
 
-			return common.NULL
+			return NULL
 		},
 	},
 	"last": {
@@ -62,7 +62,7 @@ var builtins = map[string]*object.Builtin{
 				return arr.Elements[length-1]
 			}
 
-			return common.NULL
+			return NULL
 		},
 	},
 	"rest": {
@@ -84,7 +84,7 @@ var builtins = map[string]*object.Builtin{
 				return &object.Array{Elements: newElements}
 			}
 
-			return common.NULL
+			return NULL
 		},
 	},
 	"push": {
@@ -114,7 +114,7 @@ var builtins = map[string]*object.Builtin{
 				fmt.Println(arg.Inspect())
 			}
 
-			return common.NULL
+			return NULL
 		},
 	},
 }

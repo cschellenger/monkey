@@ -198,7 +198,7 @@ func TestWhileLoop(t *testing.T) {
 }
 
 func testNullObject(t *testing.T, obj object.Object, input string) bool {
-	if obj != common.NULL {
+	if obj != NULL {
 		t.Errorf("object is not NULL. got=%T (%+v), input='%s'", obj, obj, input)
 		return false
 	}
@@ -538,8 +538,8 @@ func TestHashLiterals(t *testing.T) {
 		(&object.String{Value: "two"}).HashKey():   2,
 		(&object.String{Value: "three"}).HashKey(): 3,
 		(&object.Integer{Value: 4}).HashKey():      4,
-		common.TRUE.HashKey():                      5,
-		common.FALSE.HashKey():                     6,
+		TRUE.HashKey():                             5,
+		FALSE.HashKey():                            6,
 	}
 
 	if len(result.Pairs) != len(expected) {

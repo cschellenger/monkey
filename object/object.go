@@ -370,6 +370,10 @@ type Error struct {
 	Message string
 }
 
+func (e Error) Error() string {
+	return e.Message
+}
+
 func (e *Error) Type() ObjectType {
 	return ERROR_OBJ
 }

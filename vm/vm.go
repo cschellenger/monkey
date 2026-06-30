@@ -10,6 +10,9 @@ import (
 
 const StackSize = 2048
 
+var True = &object.Boolean{Value: true}
+var False = &object.Boolean{Value: false}
+
 type VM struct {
 	constants    []object.Object
 	instructions code.Instructions
@@ -45,19 +48,78 @@ func (vm *VM) Run() error {
 			if err != nil {
 				return err
 			}
-		case code.OpAdd:
-			right := vm.pop()
-			left := vm.pop()
-			lv := left.(*object.Integer).Value
-			rv := right.(*object.Integer).Value
-			result := lv + rv
-			vm.push(&object.Integer{Value: result})
+		case code.OpAdd, code.OpSub, code.OpMul, code.OpDiv:
+			err := vm.executeBinaryOperation(op)
+			if err != nil {
+				return err
+			}
+		case code.OpTrue:
+			err := vm.push(True)
+			if err != nil {
+				return err
+			}
+
+		case code.OpFalse:
+			err := vm.push(False)
+			if err != nil {
+				return err
+			}
 
 		case code.OpPop:
 			vm.pop()
 		}
 	}
 
+	return nil
+}
+
+func (vm *VM) executeBinaryOperation(op code.Opcode) error {
+	right := vm.pop()
+	left := vm.pop()
+	var result object.Object
+	var err *object.Error
+	switch op {
+	case code.OpAdd:
+		leftOpAdd, ok := left.(object.OperatorPlus)
+		if ok {
+			if result, err = leftOpAdd.Plus(right); err != nil {
+				return err
+			}
+		} else {
+			return object.UnsupportedOperation(left.Type(), "+", right.Type())
+		}
+
+	case code.OpSub:
+		leftOpSub, ok := left.(object.OperatorMinus)
+		if ok {
+			if result, err = leftOpSub.Minus(right); err != nil {
+				return err
+			}
+		} else {
+			return object.UnsupportedOperation(left.Type(), "-", right.Type())
+		}
+
+	case code.OpMul:
+		leftOpMul, ok := left.(object.OperatorStar)
+		if ok {
+			if result, err = leftOpMul.Star(right); err != nil {
+				return err
+			}
+		} else {
+			return object.UnsupportedOperation(left.Type(), "*", right.Type())
+		}
+
+	case code.OpDiv:
+		leftOpDiv, ok := left.(object.OperatorSlash)
+		if ok {
+			if result, err = leftOpDiv.Slash(right); err != nil {
+				return err
+			}
+		} else {
+			return object.UnsupportedOperation(left.Type(), "/", right.Type())
+		}
+	}
+	vm.push(result)
 	return nil
 }
 

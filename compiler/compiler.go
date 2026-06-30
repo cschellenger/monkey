@@ -2,6 +2,7 @@ package compiler
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/cschellenger/monkey/code"
@@ -36,6 +37,11 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 		}
 		c.emit(code.OpPop)
 
+	case *parser.ParenExpressionContext:
+		if err := c.Compile(node.Expression()); err != nil {
+			return err
+		}
+
 	case *parser.StarSlashExpressionContext:
 		return c.compileInfixExpression(node)
 
@@ -46,8 +52,7 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 		return c.compileInfixExpression(node)
 
 	case *parser.LiteralExpressionContext:
-		lit := common.EvalLiteralExpression(node)
-		c.emit(code.OpConstant, c.addConstant(lit))
+		return c.compileLiteralExpression(node)
 	}
 	return nil
 }
@@ -80,6 +85,12 @@ func (c *Compiler) compileInfixExpression(node common.InfixExpression) error {
 	switch op {
 	case "+":
 		c.emit(code.OpAdd)
+	case "-":
+		c.emit(code.OpSub)
+	case "*":
+		c.emit(code.OpMul)
+	case "/":
+		c.emit(code.OpDiv)
 	default:
 		return fmt.Errorf("unknown operator: %s", op)
 	}
@@ -96,4 +107,42 @@ func (c *Compiler) Bytecode() *Bytecode {
 type Bytecode struct {
 	Instructions code.Instructions
 	Constants    []object.Object
+}
+
+func (c *Compiler) compileLiteralExpression(le *parser.LiteralExpressionContext) error {
+	lit := le.Literal()
+	booleanLit := lit.BooleanLiteral()
+	if booleanLit != nil {
+		if booleanLit.GetSymbol().GetText() == "true" {
+			c.emit(code.OpTrue)
+		} else {
+			c.emit(code.OpFalse)
+		}
+		return nil
+	}
+	integerLit := lit.IntegerLiteral()
+	if integerLit != nil {
+		value, err := strconv.ParseInt(integerLit.GetSymbol().GetText(), 0, 64)
+		if err != nil {
+			return common.NewError("could not parse %s as integer", integerLit.GetSymbol().GetText())
+		}
+		c.emit(code.OpConstant, c.addConstant(&object.Integer{Value: value}))
+		return nil
+	}
+	floatLit := lit.FloatLiteral()
+	if floatLit != nil {
+		value, err := strconv.ParseFloat(floatLit.GetSymbol().GetText(), 64)
+		if err != nil {
+			return common.NewError("could not parse %q as float", floatLit.GetSymbol().GetText())
+		}
+		c.emit(code.OpConstant, c.addConstant(&object.Float{Value: value}))
+		return nil
+	}
+	stringLit := lit.StringLiteral()
+	if stringLit != nil {
+		rawText := stringLit.GetText()
+		c.emit(code.OpConstant, c.addConstant(&object.String{Value: rawText[1 : len(rawText)-1]}))
+		return nil
+	}
+	return common.NewError("unexpected literal: %s", lit.GetText())
 }
