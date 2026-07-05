@@ -19,17 +19,11 @@ type InfixExpression interface {
 	GetOp() antlr.Token
 }
 
-func EvalBangOperatorExpression(right object.Object) object.Object {
-	switch right {
-	case TRUE:
-		return FALSE
-	case FALSE:
+func NativeBoolToBooleanObject(input bool) *object.Boolean {
+	if input {
 		return TRUE
-	case NULL:
-		return TRUE
-	default:
-		return FALSE
 	}
+	return FALSE
 }
 
 func NewError(format string, a ...any) *object.Error {

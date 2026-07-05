@@ -41,6 +41,11 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 		if err := c.Compile(node.Expression()); err != nil {
 			return err
 		}
+	case *parser.NegatedExpressionContext:
+		if err := c.Compile(node.Expression()); err != nil {
+			return err
+		}
+		c.emit(code.OpBang)
 
 	case *parser.StarSlashExpressionContext:
 		return c.compileInfixExpression(node)
@@ -91,6 +96,18 @@ func (c *Compiler) compileInfixExpression(node common.InfixExpression) error {
 		c.emit(code.OpMul)
 	case "/":
 		c.emit(code.OpDiv)
+	case ">":
+		c.emit(code.OpGreaterThan)
+	case "<":
+		c.emit(code.OpLessThan)
+	case ">=":
+		c.emit(code.OpGreaterEqual)
+	case "<=":
+		c.emit(code.OpLessEqual)
+	case "==":
+		c.emit(code.OpEqual)
+	case "!=":
+		c.emit(code.OpNotEqual)
 	default:
 		return fmt.Errorf("unknown operator: %s", op)
 	}
@@ -133,7 +150,8 @@ func (c *Compiler) compileLiteralExpression(le *parser.LiteralExpressionContext)
 	if floatLit != nil {
 		value, err := strconv.ParseFloat(floatLit.GetSymbol().GetText(), 64)
 		if err != nil {
-			return common.NewError("could not parse %q as float", floatLit.GetSymbol().GetText())
+			return common.
+				NewError("could not parse %q as float", floatLit.GetSymbol().GetText())
 		}
 		c.emit(code.OpConstant, c.addConstant(&object.Float{Value: value}))
 		return nil

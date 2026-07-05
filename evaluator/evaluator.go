@@ -9,12 +9,6 @@ import (
 	"github.com/cschellenger/monkey/parser"
 )
 
-var (
-	TRUE  = &object.Boolean{Value: true}
-	FALSE = &object.Boolean{Value: false}
-	NULL  = &object.Null{}
-)
-
 func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
 	switch node := node.(type) {
 
@@ -109,7 +103,7 @@ func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
 		return Eval(node.Expression(), env)
 
 	case nil:
-		return NULL
+		return common.NULL
 	}
 
 	return nil
@@ -252,15 +246,15 @@ func evalInfixExpression(
 	case operator == "==":
 		leftEquals, ok := left.(object.OperatorEquals)
 		if ok {
-			return NativeBoolToBooleanObject(left == right || leftEquals.Equals(right))
+			return common.NativeBoolToBooleanObject(left == right || leftEquals.Equals(right))
 		}
-		return NativeBoolToBooleanObject(left == right)
+		return common.NativeBoolToBooleanObject(left == right)
 	case operator == "!=":
 		leftEquals, ok := left.(object.OperatorEquals)
 		if ok {
-			return NativeBoolToBooleanObject(left != right && !leftEquals.Equals(right))
+			return common.NativeBoolToBooleanObject(left != right && !leftEquals.Equals(right))
 		}
-		return NativeBoolToBooleanObject(left != right)
+		return common.NativeBoolToBooleanObject(left != right)
 	case operator == ">=":
 		return evalComparable(left, right, operator, compareGreaterEquals)
 	case operator == ">":
@@ -307,7 +301,7 @@ func evalComparable(
 		if err != nil {
 			return err
 		}
-		return NativeBoolToBooleanObject(comparison(result))
+		return common.NativeBoolToBooleanObject(comparison(result))
 	}
 	return object.UnsupportedOperation(left.Type(), operator, right.Type())
 }
@@ -327,7 +321,7 @@ func evalStringInfixExpression(
 
 func evalWhileLoop(wl *parser.WhileStatementContext, env *object.Environment) object.Object {
 	keepGoing := true
-	var retVal object.Object = NULL
+	var retVal object.Object = common.NULL
 	for keepGoing {
 		condition := Eval(wl.Expression(), env)
 		if isError(condition) {
@@ -356,7 +350,7 @@ func evalIfExpression(ie *parser.IfExpressionContext, env *object.Environment) o
 	} else if ie.ELSE() != nil {
 		return Eval(ie.CompoundStatement(1), env)
 	} else {
-		return NULL
+		return common.NULL
 	}
 }
 
@@ -377,7 +371,7 @@ func evalArrayIndexExpression(array, index object.Object) object.Object {
 	max := int64(len(arrayObject.Elements) - 1)
 
 	if idx < 0 || idx > max {
-		return NULL
+		return common.NULL
 	}
 
 	return arrayObject.Elements[idx]
@@ -391,7 +385,7 @@ func evalHashIndexExpression(hash, index object.Object) object.Object {
 	}
 	pair, ok := hashObject.Pairs[key.HashKey()]
 	if !ok {
-		return NULL
+		return common.NULL
 	}
 	return pair.Value
 }
@@ -423,11 +417,11 @@ func evalHashLiteral(
 
 func isTruthy(obj object.Object) bool {
 	switch obj {
-	case NULL:
+	case common.NULL:
 		return false
-	case TRUE:
+	case common.TRUE:
 		return true
-	case FALSE:
+	case common.FALSE:
 		return false
 	default:
 		return true
@@ -448,14 +442,14 @@ func errOrResult(res object.Object, err *object.Error) object.Object {
 	if res != nil {
 		return res
 	}
-	return NULL
+	return common.NULL
 }
 
 func evalLiteralExpression(le *parser.LiteralExpressionContext) object.Object {
 	lit := le.Literal()
 	booleanLit := lit.BooleanLiteral()
 	if booleanLit != nil {
-		return NativeBoolToBooleanObject(booleanLit.GetSymbol().GetText() == "true")
+		return common.NativeBoolToBooleanObject(booleanLit.GetSymbol().GetText() == "true")
 	}
 	integerLit := lit.IntegerLiteral()
 	if integerLit != nil {
@@ -481,22 +475,15 @@ func evalLiteralExpression(le *parser.LiteralExpressionContext) object.Object {
 	return common.NewError("unexpected literal: %s", lit.GetText())
 }
 
-func NativeBoolToBooleanObject(input bool) *object.Boolean {
-	if input {
-		return TRUE
-	}
-	return FALSE
-}
-
 func evalBangOperatorExpression(right object.Object) object.Object {
 	switch right {
-	case TRUE:
-		return FALSE
-	case FALSE:
-		return TRUE
-	case NULL:
-		return TRUE
+	case common.TRUE:
+		return common.FALSE
+	case common.FALSE:
+		return common.TRUE
+	case common.NULL:
+		return common.TRUE
 	default:
-		return FALSE
+		return common.FALSE
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cschellenger/monkey/code"
+	"github.com/cschellenger/monkey/common"
 	"github.com/cschellenger/monkey/compiler"
 	"github.com/cschellenger/monkey/object"
 )
@@ -44,24 +45,26 @@ func (vm *VM) Run() error {
 			constIndex := code.ReadUint16(vm.instructions[ip+1:])
 			ip += 2
 
-			err := vm.push(vm.constants[constIndex])
-			if err != nil {
+			if err := vm.push(vm.constants[constIndex]); err != nil {
 				return err
 			}
-		case code.OpAdd, code.OpSub, code.OpMul, code.OpDiv:
-			err := vm.executeBinaryOperation(op)
-			if err != nil {
+
+		case code.OpBang:
+			if err := vm.executeBangOperator(); err != nil {
+				return err
+			}
+
+		case code.OpAdd, code.OpSub, code.OpMul, code.OpDiv, code.OpEqual, code.OpNotEqual, code.OpGreaterThan, code.OpGreaterEqual, code.OpLessThan, code.OpLessEqual:
+			if err := vm.executeBinaryOperation(op); err != nil {
 				return err
 			}
 		case code.OpTrue:
-			err := vm.push(True)
-			if err != nil {
+			if err := vm.push(True); err != nil {
 				return err
 			}
 
 		case code.OpFalse:
-			err := vm.push(False)
-			if err != nil {
+			if err := vm.push(False); err != nil {
 				return err
 			}
 
@@ -73,6 +76,18 @@ func (vm *VM) Run() error {
 	return nil
 }
 
+func (vm *VM) executeBangOperator() error {
+	operand := vm.pop()
+	switch operand {
+	case True:
+		return vm.push(False)
+	case False:
+		return vm.push(True)
+	default:
+		return vm.push(False)
+	}
+}
+
 func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 	right := vm.pop()
 	left := vm.pop()
@@ -80,8 +95,7 @@ func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 	var err *object.Error
 	switch op {
 	case code.OpAdd:
-		leftOpAdd, ok := left.(object.OperatorPlus)
-		if ok {
+		if leftOpAdd, ok := left.(object.OperatorPlus); ok {
 			if result, err = leftOpAdd.Plus(right); err != nil {
 				return err
 			}
@@ -90,8 +104,7 @@ func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 		}
 
 	case code.OpSub:
-		leftOpSub, ok := left.(object.OperatorMinus)
-		if ok {
+		if leftOpSub, ok := left.(object.OperatorMinus); ok {
 			if result, err = leftOpSub.Minus(right); err != nil {
 				return err
 			}
@@ -100,8 +113,7 @@ func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 		}
 
 	case code.OpMul:
-		leftOpMul, ok := left.(object.OperatorStar)
-		if ok {
+		if leftOpMul, ok := left.(object.OperatorStar); ok {
 			if result, err = leftOpMul.Star(right); err != nil {
 				return err
 			}
@@ -110,15 +122,67 @@ func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 		}
 
 	case code.OpDiv:
-		leftOpDiv, ok := left.(object.OperatorSlash)
-		if ok {
+		if leftOpDiv, ok := left.(object.OperatorSlash); ok {
 			if result, err = leftOpDiv.Slash(right); err != nil {
 				return err
 			}
 		} else {
 			return object.UnsupportedOperation(left.Type(), "/", right.Type())
 		}
+	case code.OpEqual:
+		if leftOpEqual, ok := left.(object.OperatorEquals); ok {
+			result = common.NativeBoolToBooleanObject(leftOpEqual.Equals(right))
+		} else {
+			return object.UnsupportedOperation(left.Type(), "==", right.Type())
+		}
+	case code.OpNotEqual:
+		if leftNotEqual, ok := left.(object.OperatorEquals); ok {
+			result = common.NativeBoolToBooleanObject(!leftNotEqual.Equals(right))
+		} else {
+			return object.UnsupportedOperation(left.Type(), "!=", right.Type())
+		}
+	case code.OpGreaterThan:
+		if leftGreaterThan, ok := left.(object.Comparable); ok {
+			if cmp, err := leftGreaterThan.CompareTo(right); err == nil {
+				result = common.NativeBoolToBooleanObject(cmp == object.GREATER_THAN)
+			} else {
+				return err
+			}
+		} else {
+			return object.UnsupportedOperation(left.Type(), ">", right.Type())
+		}
+	case code.OpGreaterEqual:
+		if leftGreaterEqual, ok := left.(object.Comparable); ok {
+			if cmp, err := leftGreaterEqual.CompareTo(right); err == nil {
+				result = common.NativeBoolToBooleanObject(cmp == object.GREATER_THAN || cmp == object.EQUAL)
+			} else {
+				return err
+			}
+		} else {
+			return object.UnsupportedOperation(left.Type(), ">=", right.Type())
+		}
+	case code.OpLessThan:
+		if leftLessThan, ok := left.(object.Comparable); ok {
+			if cmp, err := leftLessThan.CompareTo(right); err == nil {
+				result = common.NativeBoolToBooleanObject(cmp == object.LESS_THAN)
+			} else {
+				return err
+			}
+		} else {
+			return object.UnsupportedOperation(left.Type(), "<", right.Type())
+		}
+	case code.OpLessEqual:
+		if leftLessEqual, ok := left.(object.Comparable); ok {
+			if cmp, err := leftLessEqual.CompareTo(right); err == nil {
+				result = common.NativeBoolToBooleanObject(cmp == object.LESS_THAN || cmp == object.EQUAL)
+			} else {
+				return err
+			}
+		} else {
+			return object.UnsupportedOperation(left.Type(), "<=", right.Type())
+		}
 	}
+
 	vm.push(result)
 	return nil
 }

@@ -76,7 +76,7 @@ func runVmTests(t *testing.T, tests []vmTestCase) {
 
 		stackElem := vm.LastPoppedStackElem()
 
-		testExpectedObject(t, tt.expected, stackElem)
+		testExpectedObject(t, tt.expected, stackElem, tt.input)
 	}
 }
 
@@ -84,21 +84,22 @@ func testExpectedObject(
 	t *testing.T,
 	expected any,
 	actual object.Object,
+	input string,
 ) {
 	t.Helper()
 
 	switch expected := expected.(type) {
 	case int:
 		if err := testIntegerObject(int64(expected), actual); err != nil {
-			t.Errorf("testIntegerObject failed: %s", err)
+			t.Errorf("testIntegerObject failed: %s, input: %s", err, input)
 		}
 	case float64:
 		if err := testFloatObject(expected, actual); err != nil {
-			t.Errorf("testFloatObject failed: %s", err)
+			t.Errorf("testFloatObject failed: %s, input: %s", err, input)
 		}
 	case bool:
 		if err := testBooleanObject(bool(expected), actual); err != nil {
-			t.Errorf("testBooleanObject failed: %s", err)
+			t.Errorf("testBooleanObject failed: %s, input: %s", err, input)
 		}
 	}
 }
@@ -117,6 +118,10 @@ func TestIntegerArithmetic(t *testing.T) {
 		{"5 * 2 + 10", 20},
 		{"5 + 2 * 10", 25},
 		{"5 * (2 + 10)", 60},
+		{"-5", -5},
+		{"-10", -10},
+		{"-50 + 100 + -50", 0},
+		{"(5 + 10 * 2 + 15 / 3) * 2 + -10", 50},
 	}
 
 	runVmTests(t, tests)
@@ -126,6 +131,39 @@ func TestBooleanExpressions(t *testing.T) {
 	tests := []vmTestCase{
 		{"true", true},
 		{"false", false},
+		{"1 < 2", true},
+		{"1 <= 2", true},
+		{"2 <= 2", true},
+		{"3 <= 2", false},
+		{"1 > 2", false},
+		{"1 >= 2", false},
+		{"2 >= 2", true},
+		{"3 >= 2", true},
+		{"1 < 1", false},
+		{"1 > 1", false},
+		{"1 == 1", true},
+		{"1 != 1", false},
+		{"1 == 2", false},
+		{"1 != 2", true},
+		{"true == true", true},
+		{"false == false", true},
+		{"true == false", false},
+		{"true != false", true},
+		{"false != true", true},
+		{"(1 < 2) == true", true},
+		{"(1 <= 2) == true", true},
+		{"(1 < 2) == false", false},
+		{"(1 <= 2) == false", false},
+		{"(1 > 2) == true", false},
+		{"(1 >= 2) == true", false},
+		{"(1 > 2) == false", true},
+		{"(1 >= 2) == false", true},
+		{"!true", false},
+		{"!false", true},
+		{"!5", false},
+		{"!!true", true},
+		{"!!false", false},
+		{"!!5", true},
 	}
 
 	runVmTests(t, tests)
