@@ -12,14 +12,23 @@ import (
 )
 
 type Compiler struct {
-	instructions code.Instructions
-	constants    []object.Object
+	instructions        code.Instructions
+	constants           []object.Object
+	lastInstruction     EmittedInstruction
+	previousInstruction EmittedInstruction
+}
+
+type EmittedInstruction struct {
+	OpCode   code.Opcode
+	Position int
 }
 
 func New() *Compiler {
 	return &Compiler{
-		instructions: code.Instructions{},
-		constants:    []object.Object{},
+		instructions:        code.Instructions{},
+		constants:           []object.Object{},
+		previousInstruction: EmittedInstruction{},
+		lastInstruction:     EmittedInstruction{},
 	}
 }
 
@@ -47,6 +56,47 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 		}
 		c.emit(code.OpBang)
 
+	case *parser.IfExpressionContext:
+		if err := c.Compile(node.Expression()); err != nil {
+			return err
+		}
+		// emit on `OpJumpNotTruthy` with a bogus value
+		jumpNotTruthyPos := c.emit(code.OpJumpNotTruthy, 9999)
+
+		// main conditional block
+		if err := c.Compile(node.CompoundStatement(0)); err != nil {
+			return err
+		}
+		if c.lastInstructionIsPop() {
+			c.removeLastPop()
+		}
+
+		// Emit an `OpJump` with a bogus value
+		jumpPos := c.emit(code.OpJump, 9999)
+		afterConsequencePos := len(c.instructions)
+		c.changeOperand(jumpNotTruthyPos, afterConsequencePos)
+
+		if node.ELSE() == nil {
+			c.emit(code.OpNull)
+		} else {
+			// else block
+			if err := c.Compile(node.CompoundStatement(1)); err != nil {
+				return err
+			}
+			if c.lastInstructionIsPop() {
+				c.removeLastPop()
+			}
+		}
+		afterElsePos := len(c.instructions)
+		c.changeOperand(jumpPos, afterElsePos)
+
+	case *parser.CompoundStatementContext:
+		for _, s := range node.AllStatement() {
+			if err := c.Compile(s); err != nil {
+				return err
+			}
+		}
+
 	case *parser.StarSlashExpressionContext:
 		return c.compileInfixExpression(node)
 
@@ -62,10 +112,42 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 	return nil
 }
 
+func (c *Compiler) replaceInstruction(pos int, newInstruction []byte) {
+	for i := range newInstruction {
+		c.instructions[pos+i] = newInstruction[i]
+	}
+}
+
+func (c *Compiler) changeOperand(opPos int, operand int) {
+	op := code.Opcode(c.instructions[opPos])
+	newInstruction := code.Make(op, operand)
+
+	c.replaceInstruction(opPos, newInstruction)
+}
+
+func (c *Compiler) setLastInstruction(op code.Opcode, pos int) {
+	previous := c.lastInstruction
+	last := EmittedInstruction{OpCode: op, Position: pos}
+
+	c.previousInstruction = previous
+	c.lastInstruction = last
+}
+
 func (c *Compiler) emit(op code.Opcode, operands ...int) int {
 	ins := code.Make(op, operands...)
 	pos := c.addInstruction(ins)
+
+	c.setLastInstruction(op, pos)
 	return pos
+}
+
+func (c *Compiler) lastInstructionIsPop() bool {
+	return c.lastInstruction.OpCode == code.OpPop
+}
+
+func (c *Compiler) removeLastPop() {
+	c.instructions = c.instructions[:c.lastInstruction.Position]
+	c.lastInstruction = c.previousInstruction
 }
 
 func (c *Compiler) addInstruction(ins []byte) int {
