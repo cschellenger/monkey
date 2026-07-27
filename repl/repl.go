@@ -8,6 +8,7 @@ import (
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/cschellenger/monkey/common"
 	"github.com/cschellenger/monkey/compiler"
+	"github.com/cschellenger/monkey/object"
 	"github.com/cschellenger/monkey/parser"
 	"github.com/cschellenger/monkey/vm"
 
@@ -40,6 +41,11 @@ var completer = readline.NewPrefixCompleter(
 )
 
 func Start(in io.Reader, out io.Writer) {
+
+	constants := []object.Object{}
+	globals := make([]object.Object, vm.GlobalsSize)
+	symbolTable := compiler.NewSymbolTable()
+
 	rl, err := readline.NewEx(&readline.Config{
 		Prompt:          "\033[31m»\033[0m ",
 		HistoryFile:     "/tmp/monkey.readline.tmp",
@@ -90,14 +96,14 @@ func Start(in io.Reader, out io.Writer) {
 			io.WriteString(out, "\n")
 		}
 		*/
-		comp := compiler.New()
+		comp := compiler.NewWithState(symbolTable, constants)
 		err = comp.Compile(program)
 		if err != nil {
 			fmt.Fprintf(out, "Woops! Compilation failed:\n %s\n", err)
 			continue
 		}
 
-		machine := vm.New(comp.Bytecode())
+		machine := vm.NewWithGlobalsStore(comp.Bytecode(), globals)
 		err = machine.Run()
 		if err != nil {
 			fmt.Fprintf(out, "Woops! Executing bytecode failed:\n %s\n", err)
