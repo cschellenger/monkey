@@ -2,6 +2,7 @@ package compiler
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 
 	"github.com/antlr4-go/antlr/v4"
@@ -105,6 +106,39 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 				return err
 			}
 		}
+
+	case *parser.ArrayLiteralExpressionContext:
+		exprs := node.ExpressionList().AllExpression()
+		for _, elem := range exprs {
+			if err := c.Compile(elem); err != nil {
+				return err
+			}
+		}
+		c.emit(code.OpArray, len(exprs))
+
+	case *parser.HashLiteralExpressionContext:
+		pairs := node.AllPair()
+		sort.Slice(pairs, func(i, j int) bool {
+			return pairs[i].Expression(0).GetText() < pairs[j].Expression(0).GetText()
+		})
+		for _, elem := range pairs {
+			if err := c.Compile(elem.Expression(0)); err != nil {
+				return err
+			}
+			if err := c.Compile(elem.Expression(1)); err != nil {
+				return err
+			}
+		}
+		c.emit(code.OpHash, len(pairs)*2)
+
+	case *parser.IndexExpressionContext:
+		if err := c.Compile(node.Expression(0)); err != nil {
+			return err
+		}
+		if err := c.Compile(node.Expression(1)); err != nil {
+			return err
+		}
+		c.emit(code.OpIndex)
 
 	case *parser.StarSlashExpressionContext:
 		return c.compileInfixExpression(node)
