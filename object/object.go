@@ -520,6 +520,7 @@ func (s *String) HashKey() HashKey {
 type CompiledFunction struct {
 	Instructions code.Instructions
 	NumLocals    int
+	NumParams    int
 }
 
 func (cf *CompiledFunction) Type() ObjectType {

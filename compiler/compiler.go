@@ -175,6 +175,11 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 	case *parser.FunctionExpressionContext:
 		c.enterScope()
 
+		params := node.Params().AllIdentifier()
+		for _, p := range params {
+			c.symbolTable.Define(p.GetText())
+		}
+
 		if err := c.Compile(node.CompoundStatement()); err != nil {
 			return err
 		}
@@ -190,6 +195,7 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 		compiledFn := &object.CompiledFunction{
 			Instructions: instructions,
 			NumLocals:    numLocals,
+			NumParams:    len(params),
 		}
 		c.emit(code.OpConstant, c.addConstant(compiledFn))
 
@@ -203,10 +209,13 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 		if err := c.Compile(node.Expression()); err != nil {
 			return err
 		}
-		if err := c.Compile(node.ExpressionList()); err != nil {
-			return err
+		args := node.ExpressionList().AllExpression()
+		for _, arg := range args {
+			if err := c.Compile(arg); err != nil {
+				return err
+			}
 		}
-		c.emit(code.OpCall)
+		c.emit(code.OpCall, len(args))
 
 	case *parser.ArrayLiteralExpressionContext:
 		exprs := node.ExpressionList().AllExpression()
