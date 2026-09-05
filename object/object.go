@@ -6,23 +6,25 @@ import (
 	"hash/fnv"
 	"strings"
 
+	"github.com/cschellenger/monkey/code"
 	"github.com/cschellenger/monkey/parser"
 )
 
 type ObjectType string
 
 const (
-	INTEGER_OBJ      ObjectType = "INTEGER"
-	FLOAT_OBJ        ObjectType = "FLOAT"
-	BOOLEAN_OBJ      ObjectType = "BOOLEAN"
-	STRING_OBJ       ObjectType = "STRING"
-	NULL_OBJ         ObjectType = "NULL"
-	RETURN_VALUE_OBJ ObjectType = "RETURN_VALUE"
-	ERROR_OBJ        ObjectType = "ERROR"
-	FUNCTION_OBJ     ObjectType = "FUNCTION"
-	BUILTIN_OBJ      ObjectType = "BUILTIN"
-	ARRAY_OBJ        ObjectType = "ARRAY"
-	HASH_OBJ         ObjectType = "HASH"
+	INTEGER_OBJ           ObjectType = "INTEGER"
+	FLOAT_OBJ             ObjectType = "FLOAT"
+	BOOLEAN_OBJ           ObjectType = "BOOLEAN"
+	STRING_OBJ            ObjectType = "STRING"
+	NULL_OBJ              ObjectType = "NULL"
+	RETURN_VALUE_OBJ      ObjectType = "RETURN_VALUE"
+	ERROR_OBJ             ObjectType = "ERROR"
+	FUNCTION_OBJ          ObjectType = "FUNCTION"
+	BUILTIN_OBJ           ObjectType = "BUILTIN"
+	ARRAY_OBJ             ObjectType = "ARRAY"
+	HASH_OBJ              ObjectType = "HASH"
+	COMPILED_FUNCTION_OBJ ObjectType = "COMPILED_FUNCTION"
 )
 
 type CompareResult int
@@ -513,4 +515,16 @@ func (s *String) HashKey() HashKey {
 	h.Write([]byte(s.Value))
 
 	return HashKey{Type: s.Type(), Value: h.Sum64()}
+}
+
+type CompiledFunction struct {
+	Instructions code.Instructions
+	NumLocals    int
+}
+
+func (cf *CompiledFunction) Type() ObjectType {
+	return COMPILED_FUNCTION_OBJ
+}
+func (cf *CompiledFunction) Inspect() string {
+	return fmt.Sprintf("CompiledFunction[%p]", cf)
 }

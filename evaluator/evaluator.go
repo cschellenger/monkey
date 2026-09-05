@@ -52,8 +52,8 @@ func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
 		return &object.Function{Parameters: params, Env: env, Body: body}
 
 	case *parser.CallExpressionContext:
-		ident := node.Identifier()
-		function := evalIdentifier(ident, env)
+		identOrLiteral := node.Expression()
+		function := Eval(identOrLiteral, env)
 		if isError(function) {
 			return function
 		}

@@ -18,7 +18,7 @@ statement
 expression
     : 'if' '(' expression ')' '{' compoundStatement '}' ('else' '{' compoundStatement '}')? # ifExpression
     | 'fn' '(' params ')' '{' compoundStatement '}'                                         # functionExpression
-    | identifier '(' expressionList ')'                                                     # callExpression
+    | expression '(' expressionList ')'                                                     # callExpression
     | expression '[' expression ']'                                                         # indexExpression
     | identifier                                                                            # identifierExpression
     | literal                                                                               # literalExpression
