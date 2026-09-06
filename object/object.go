@@ -10,6 +10,12 @@ import (
 	"github.com/cschellenger/monkey/parser"
 )
 
+var (
+	TRUE  = &Boolean{Value: true}
+	FALSE = &Boolean{Value: false}
+	NULL  = &Null{}
+)
+
 type ObjectType string
 
 const (
@@ -528,4 +534,8 @@ func (cf *CompiledFunction) Type() ObjectType {
 }
 func (cf *CompiledFunction) Inspect() string {
 	return fmt.Sprintf("CompiledFunction[%p]", cf)
+}
+
+func NewError(format string, a ...any) *Error {
+	return &Error{Message: fmt.Sprintf(format, a...)}
 }

@@ -37,9 +37,15 @@ func New() *Compiler {
 		previousInstruction: EmittedInstruction{},
 	}
 
+	symbolTable := NewSymbolTable()
+
+	for i, v := range object.Builtins {
+		symbolTable.DefineBuiltin(i, v.Name)
+	}
+
 	return &Compiler{
 		constants:   []object.Object{},
-		symbolTable: NewSymbolTable(),
+		symbolTable: symbolTable,
 		scopes:      []CompilationScope{mainScope},
 		scopeIndex:  0,
 	}
@@ -278,14 +284,22 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 		if !ok {
 			return fmt.Errorf("undefined variable %s", node.Identifier().GetText())
 		}
-		if symbol.Scope == GlobalScope {
-			c.emit(code.OpGetGlobal, symbol.Index)
-		} else {
-			c.emit(code.OpGetLocal, symbol.Index)
-		}
+		c.loadSymbol(symbol)
+
 	}
 
 	return nil
+}
+
+func (c *Compiler) loadSymbol(s Symbol) {
+	switch s.Scope {
+	case GlobalScope:
+		c.emit(code.OpGetGlobal, s.Index)
+	case LocalScope:
+		c.emit(code.OpGetLocal, s.Index)
+	case BuiltinScope:
+		c.emit(code.OpGetBuiltin, s.Index)
+	}
 }
 
 func (c *Compiler) emit(op code.Opcode, operands ...int) int {
@@ -363,7 +377,7 @@ func (c *Compiler) compileLiteralExpression(le *parser.LiteralExpressionContext)
 	if integerLit != nil {
 		value, err := strconv.ParseInt(integerLit.GetSymbol().GetText(), 0, 64)
 		if err != nil {
-			return common.NewError("could not parse %s as integer", integerLit.GetSymbol().GetText())
+			return object.NewError("could not parse %s as integer", integerLit.GetSymbol().GetText())
 		}
 		c.emit(code.OpConstant, c.addConstant(&object.Integer{Value: value}))
 		return nil
@@ -372,8 +386,7 @@ func (c *Compiler) compileLiteralExpression(le *parser.LiteralExpressionContext)
 	if floatLit != nil {
 		value, err := strconv.ParseFloat(floatLit.GetSymbol().GetText(), 64)
 		if err != nil {
-			return common.
-				NewError("could not parse %q as float", floatLit.GetSymbol().GetText())
+			return object.NewError("could not parse %q as float", floatLit.GetSymbol().GetText())
 		}
 		c.emit(code.OpConstant, c.addConstant(&object.Float{Value: value}))
 		return nil
@@ -384,7 +397,7 @@ func (c *Compiler) compileLiteralExpression(le *parser.LiteralExpressionContext)
 		c.emit(code.OpConstant, c.addConstant(&object.String{Value: rawText[1 : len(rawText)-1]}))
 		return nil
 	}
-	return common.NewError("unexpected literal: %s", lit.GetText())
+	return object.NewError("unexpected literal: %s", lit.GetText())
 }
 
 func (c *Compiler) enterScope() {

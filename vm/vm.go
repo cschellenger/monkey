@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/cschellenger/monkey/code"
-	"github.com/cschellenger/monkey/common"
 	"github.com/cschellenger/monkey/compiler"
 	"github.com/cschellenger/monkey/object"
 )
@@ -173,7 +172,7 @@ func (vm *VM) Run() error {
 			numArgs := code.ReadUint8(ins[ip+1:])
 			vm.currentFrame().ip += 1
 
-			err := vm.callFunction(int(numArgs))
+			err := vm.executeCall(int(numArgs))
 			if err != nil {
 				return err
 			}
@@ -213,6 +212,16 @@ func (vm *VM) Run() error {
 			frame := vm.currentFrame()
 
 			err := vm.push(vm.stack[frame.basePointer+int(localIndex)])
+			if err != nil {
+				return err
+			}
+		case code.OpGetBuiltin:
+			builtinIndex := code.ReadUint8(ins[ip+1:])
+			vm.currentFrame().ip += 1
+
+			definition := object.Builtins[builtinIndex]
+
+			err := vm.push(definition.Builtin)
 			if err != nil {
 				return err
 			}
@@ -363,20 +372,20 @@ func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 		}
 	case code.OpEqual:
 		if leftOpEqual, ok := left.(object.OperatorEquals); ok {
-			result = common.NativeBoolToBooleanObject(leftOpEqual.Equals(right))
+			result = NativeBoolToBooleanObject(leftOpEqual.Equals(right))
 		} else {
 			return object.UnsupportedOperation(left.Type(), "==", right.Type())
 		}
 	case code.OpNotEqual:
 		if leftNotEqual, ok := left.(object.OperatorEquals); ok {
-			result = common.NativeBoolToBooleanObject(!leftNotEqual.Equals(right))
+			result = NativeBoolToBooleanObject(!leftNotEqual.Equals(right))
 		} else {
 			return object.UnsupportedOperation(left.Type(), "!=", right.Type())
 		}
 	case code.OpGreaterThan:
 		if leftGreaterThan, ok := left.(object.Comparable); ok {
 			if cmp, err := leftGreaterThan.CompareTo(right); err == nil {
-				result = common.NativeBoolToBooleanObject(cmp == object.GREATER_THAN)
+				result = NativeBoolToBooleanObject(cmp == object.GREATER_THAN)
 			} else {
 				return err
 			}
@@ -386,7 +395,7 @@ func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 	case code.OpGreaterEqual:
 		if leftGreaterEqual, ok := left.(object.Comparable); ok {
 			if cmp, err := leftGreaterEqual.CompareTo(right); err == nil {
-				result = common.NativeBoolToBooleanObject(cmp == object.GREATER_THAN || cmp == object.EQUAL)
+				result = NativeBoolToBooleanObject(cmp == object.GREATER_THAN || cmp == object.EQUAL)
 			} else {
 				return err
 			}
@@ -396,7 +405,7 @@ func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 	case code.OpLessThan:
 		if leftLessThan, ok := left.(object.Comparable); ok {
 			if cmp, err := leftLessThan.CompareTo(right); err == nil {
-				result = common.NativeBoolToBooleanObject(cmp == object.LESS_THAN)
+				result = NativeBoolToBooleanObject(cmp == object.LESS_THAN)
 			} else {
 				return err
 			}
@@ -406,7 +415,7 @@ func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 	case code.OpLessEqual:
 		if leftLessEqual, ok := left.(object.Comparable); ok {
 			if cmp, err := leftLessEqual.CompareTo(right); err == nil {
-				result = common.NativeBoolToBooleanObject(cmp == object.LESS_THAN || cmp == object.EQUAL)
+				result = NativeBoolToBooleanObject(cmp == object.LESS_THAN || cmp == object.EQUAL)
 			} else {
 				return err
 			}
@@ -416,24 +425,6 @@ func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 	}
 
 	vm.push(result)
-	return nil
-}
-
-func (vm *VM) callFunction(numArgs int) error {
-	fn, ok := vm.stack[vm.sp-1-numArgs].(*object.CompiledFunction)
-	if !ok {
-		return fmt.Errorf("calling non-function")
-	}
-	if numArgs != fn.NumParams {
-		return fmt.Errorf("wrong number of arguments: want=%d, got=%d",
-			fn.NumParams, numArgs)
-	}
-
-	frame := NewFrame(fn, vm.sp-numArgs)
-	vm.pushFrame(frame)
-
-	vm.sp = frame.basePointer + fn.NumLocals
-
 	return nil
 }
 
@@ -465,4 +456,52 @@ func (vm *VM) pushFrame(f *Frame) {
 func (vm *VM) popFrame() *Frame {
 	vm.framesIndex--
 	return vm.frames[vm.framesIndex]
+}
+
+func NativeBoolToBooleanObject(input bool) *object.Boolean {
+	if input {
+		return True
+	}
+	return False
+}
+
+func (vm *VM) executeCall(numArgs int) error {
+	callee := vm.stack[vm.sp-1-numArgs]
+	switch callee := callee.(type) {
+	case *object.CompiledFunction:
+		return vm.callFunction(callee, numArgs)
+	case *object.Builtin:
+		return vm.callBuiltin(callee, numArgs)
+	default:
+		return fmt.Errorf("calling non-function and non-built-in")
+	}
+}
+
+func (vm *VM) callFunction(fn *object.CompiledFunction, numArgs int) error {
+	if numArgs != fn.NumParams {
+		return fmt.Errorf("wrong number of arguments: want=%d, got=%d",
+			fn.NumParams, numArgs)
+	}
+
+	frame := NewFrame(fn, vm.sp-numArgs)
+	vm.pushFrame(frame)
+
+	vm.sp = frame.basePointer + fn.NumLocals
+
+	return nil
+}
+
+func (vm *VM) callBuiltin(builtin *object.Builtin, numArgs int) error {
+	args := vm.stack[vm.sp-numArgs : vm.sp]
+
+	result := builtin.Fn(args...)
+	vm.sp = vm.sp - numArgs - 1
+
+	if result != nil {
+		vm.push(result)
+	} else {
+		vm.push(Null)
+	}
+
+	return nil
 }

@@ -1,33 +1,13 @@
 package common
 
 import (
-	"fmt"
-
 	"github.com/antlr4-go/antlr/v4"
-	"github.com/cschellenger/monkey/object"
 	"github.com/cschellenger/monkey/parser"
-)
-
-var (
-	TRUE  = &object.Boolean{Value: true}
-	FALSE = &object.Boolean{Value: false}
-	NULL  = &object.Null{}
 )
 
 type InfixExpression interface {
 	Expression(i int) parser.IExpressionContext
 	GetOp() antlr.Token
-}
-
-func NativeBoolToBooleanObject(input bool) *object.Boolean {
-	if input {
-		return TRUE
-	}
-	return FALSE
-}
-
-func NewError(format string, a ...any) *object.Error {
-	return &object.Error{Message: fmt.Sprintf(format, a...)}
 }
 
 type MonkeyErrListener struct {
