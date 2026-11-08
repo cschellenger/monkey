@@ -23,6 +23,7 @@ type CompilationScope struct {
 	instructions        code.Instructions
 	lastInstruction     EmittedInstruction
 	previousInstruction EmittedInstruction
+	currentIdentifier   *Symbol
 }
 
 type EmittedInstruction struct {
@@ -179,7 +180,12 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 		}
 
 	case *parser.FunctionExpressionContext:
+		identifierSymbol := c.scopes[c.scopeIndex].currentIdentifier
 		c.enterScope()
+
+		if identifierSymbol != nil && identifierSymbol.Name != "" {
+			c.symbolTable.DefineFunctionName(identifierSymbol.Name)
+		}
 
 		params := node.Params().AllIdentifier()
 		for _, p := range params {
@@ -195,15 +201,22 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 		if !c.lastInstructionIs(code.OpReturnValue) {
 			c.emit(code.OpReturn)
 		}
+
+		freeSymbols := c.symbolTable.FreeSymbols
 		numLocals := c.symbolTable.numDefinitions
 		instructions := c.leaveScope()
+
+		for _, s := range freeSymbols {
+			c.loadSymbol(s)
+		}
 
 		compiledFn := &object.CompiledFunction{
 			Instructions: instructions,
 			NumLocals:    numLocals,
 			NumParams:    len(params),
 		}
-		c.emit(code.OpConstant, c.addConstant(compiledFn))
+		fnIndex := c.addConstant(compiledFn)
+		c.emit(code.OpClosure, fnIndex, len(freeSymbols))
 
 	case *parser.ReturnStatementContext:
 		if err := c.Compile(node.Expression()); err != nil {
@@ -269,10 +282,12 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 		return c.compileLiteralExpression(node)
 
 	case *parser.LetStatementContext:
+		symbol := c.symbolTable.Define(node.Identifier().GetText())
+		c.scopes[c.scopeIndex].currentIdentifier = &symbol
 		if err := c.Compile(node.Expression()); err != nil {
 			return err
 		}
-		symbol := c.symbolTable.Define(node.Identifier().GetText())
+		c.scopes[c.scopeIndex].currentIdentifier = nil
 		if symbol.Scope == GlobalScope {
 			c.emit(code.OpSetGlobal, symbol.Index)
 		} else {
@@ -299,6 +314,10 @@ func (c *Compiler) loadSymbol(s Symbol) {
 		c.emit(code.OpGetLocal, s.Index)
 	case BuiltinScope:
 		c.emit(code.OpGetBuiltin, s.Index)
+	case FreeScope:
+		c.emit(code.OpGetFree, s.Index)
+	case FunctionScope:
+		c.emit(code.OpCurrentClosure)
 	}
 }
 

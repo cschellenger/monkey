@@ -10,12 +10,6 @@ import (
 	"github.com/cschellenger/monkey/parser"
 )
 
-var (
-	TRUE  = &Boolean{Value: true}
-	FALSE = &Boolean{Value: false}
-	NULL  = &Null{}
-)
-
 type ObjectType string
 
 const (
@@ -31,6 +25,7 @@ const (
 	ARRAY_OBJ             ObjectType = "ARRAY"
 	HASH_OBJ              ObjectType = "HASH"
 	COMPILED_FUNCTION_OBJ ObjectType = "COMPILED_FUNCTION"
+	CLOSURE_OBJ           ObjectType = "CLOSURE"
 )
 
 type CompareResult int
@@ -378,7 +373,7 @@ type Error struct {
 	Message string
 }
 
-func (e Error) Error() string {
+func (e *Error) Error() string {
 	return e.Message
 }
 
@@ -538,4 +533,14 @@ func (cf *CompiledFunction) Inspect() string {
 
 func NewError(format string, a ...any) *Error {
 	return &Error{Message: fmt.Sprintf(format, a...)}
+}
+
+type Closure struct {
+	Fn   *CompiledFunction
+	Free []Object
+}
+
+func (c *Closure) Type() ObjectType { return CLOSURE_OBJ }
+func (c *Closure) Inspect() string {
+	return fmt.Sprintf("Closure[%p]", c)
 }

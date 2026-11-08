@@ -8,7 +8,7 @@ options {
 prog : statement+ ;
 
 statement
-    : RETURN expression ';'                                 # returnStatement
+    : RETURN expression ';'?                                # returnStatement
     | LET Identifier ASSIGN expression ';'?                 # letStatement
     | WHILE '(' expression ')' '{' compoundStatement '}'    # whileStatement
     | expression ';'?                                       # expressionStatement
@@ -40,7 +40,7 @@ literal
     | BooleanLiteral
     ;
 
-compoundStatement: (statement ';'?)*;
+compoundStatement: (statement)*;
 
 expressionList: (expression ',')* (expression ','?)?;
 
