@@ -1,7 +1,6 @@
 package common
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/antlr4-go/antlr/v4"
@@ -24,7 +23,7 @@ func NewErrListener() *MonkeyErrListener {
 func (mel *MonkeyErrListener) SyntaxError(recognizer antlr.Recognizer, offendingSymbol any, line, column int, msg string, e antlr.RecognitionException) {
 	fmt.Printf("Syntax error: %v, msg: %s\n", offendingSymbol, msg)
 	mel.Errors = append(mel.Errors, msg)
-	panic(errors.New(msg))
+	//panic(errors.New(msg))
 }
 
 func (mel *MonkeyErrListener) ReportAmbiguity(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex int, exact bool, ambigAlts *antlr.BitSet, configs *antlr.ATNConfigSet) {

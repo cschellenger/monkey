@@ -183,8 +183,8 @@ func TestWhileLoop(t *testing.T) {
 		input    string
 		expected any
 	}{
-		{"let counter = 0; while (counter < 3) { let counter = counter + 1; counter; }", 3},
-		{"let counter = 1; while (true) { let counter = counter * 2; if (counter > 10) { return counter; }}", 16},
+		{"let counter = 0; while (counter < 3) { counter = counter + 1; counter; }", 3},
+		{"let counter = 1; while (true) { counter = counter * 2; if (counter > 10) { return counter; }}", 16},
 	}
 	for _, tt := range tests {
 		evaluated := testEval(tt.input)
@@ -316,6 +316,22 @@ func TestLetStatements(t *testing.T) {
 		{"let a = 5 * 5; a;", 25},
 		{"let a = 5; let b = a; b;", 5},
 		{"let a = 5; let b = a; let c = a + b + 5; c;", 15},
+	}
+
+	for _, tt := range tests {
+		testIntegerObject(t, testEval(tt.input), tt.expected, tt.input)
+	}
+}
+
+func TestAssginStatements(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected int64
+	}{
+		{"a = 5; a;", 5},
+		{"a = 5 * 5; a;", 25},
+		{"a = 5; b = a; b;", 5},
+		{"a = 5; b = a; c = a + b + 5; c;", 15},
 	}
 
 	for _, tt := range tests {

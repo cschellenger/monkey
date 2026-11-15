@@ -10,6 +10,7 @@ prog : statement+ ;
 statement
     : RETURN expression ';'?                                # returnStatement
     | LET Identifier ASSIGN expression ';'?                 # letStatement
+    | Identifier ASSIGN expression ';'?                     # assignStatement
     | WHILE '(' expression ')' '{' compoundStatement '}'    # whileStatement
     | expression ';'?                                       # expressionStatement
     ;

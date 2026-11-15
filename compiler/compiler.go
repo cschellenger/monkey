@@ -172,6 +172,28 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 		afterElsePos := len(c.currentInstructions())
 		c.changeOperand(jumpPos, afterElsePos)
 
+	case *parser.WhileStatementContext:
+		startPos := len(c.currentInstructions())
+		if err := c.Compile(node.Expression()); err != nil {
+			return err
+		}
+		// emit on `OpJumpNotTruthy` with a bogus value
+		jumpNotTruthyPos := c.emit(code.OpJumpNotTruthy, 9999)
+
+		// main conditional block
+		if err := c.Compile(node.CompoundStatement()); err != nil {
+			return err
+		}
+		if c.lastInstructionIs(code.OpPop) {
+			c.removeLastPop()
+		}
+
+		// Emit an `OpJump` with the startPos
+		c.emit(code.OpJump, startPos)
+		afterLoopPos := len(c.currentInstructions())
+		c.changeOperand(jumpNotTruthyPos, afterLoopPos)
+		c.emit(code.OpNull)
+
 	case *parser.CompoundStatementContext:
 		for _, s := range node.AllStatement() {
 			if err := c.Compile(s); err != nil {
@@ -282,8 +304,26 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 		return c.compileLiteralExpression(node)
 
 	case *parser.LetStatementContext:
-		symbol := c.symbolTable.Define(node.Identifier().GetText())
+		identifier := node.Identifier().GetText()
+		symbol := c.symbolTable.Define(identifier)
 		c.scopes[c.scopeIndex].currentIdentifier = &symbol
+		if err := c.Compile(node.Expression()); err != nil {
+			return err
+		}
+		c.scopes[c.scopeIndex].currentIdentifier = nil
+		if symbol.Scope == GlobalScope {
+			c.emit(code.OpSetGlobal, symbol.Index)
+		} else {
+			c.emit(code.OpSetLocal, symbol.Index)
+		}
+
+	case *parser.AssignStatementContext:
+		identifier := node.Identifier().GetText()
+		symbol, found := c.symbolTable.Resolve(identifier)
+		if !found {
+			symbol = c.symbolTable.Define(identifier)
+			c.scopes[c.scopeIndex].currentIdentifier = &symbol
+		}
 		if err := c.Compile(node.Expression()); err != nil {
 			return err
 		}

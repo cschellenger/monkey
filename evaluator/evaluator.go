@@ -52,6 +52,13 @@ func Eval(node antlr.ParserRuleContext, env *object.Environment) object.Object {
 		}
 		env.Set(node.Identifier().GetText(), val)
 
+	case *parser.AssignStatementContext:
+		val := Eval(node.Expression(), env)
+		if isError(val) {
+			return val
+		}
+		env.Set(node.Identifier().GetText(), val)
+
 	case *parser.FunctionExpressionContext:
 		params := node.Params()
 		body := node.CompoundStatement()
