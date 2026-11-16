@@ -328,10 +328,13 @@ func (c *Compiler) Compile(node antlr.ParserRuleContext) error {
 			return err
 		}
 		c.scopes[c.scopeIndex].currentIdentifier = nil
-		if symbol.Scope == GlobalScope {
+		switch symbol.Scope {
+		case GlobalScope:
 			c.emit(code.OpSetGlobal, symbol.Index)
-		} else {
+		case LocalScope:
 			c.emit(code.OpSetLocal, symbol.Index)
+		case FreeScope:
+			c.emit(code.OpSetFree, symbol.Index)
 		}
 
 	case *parser.IdentifierExpressionContext:
