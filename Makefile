@@ -1,4 +1,4 @@
-.PHONY: test build generate
+.PHONY: test build generate mkc mvm
 
 EXECUTABLES = java go
 K := $(foreach exec,$(EXECUTABLES),\
@@ -12,3 +12,9 @@ test: generate
 
 build: generate
 	go build .
+
+mkc:
+	go build -o mkc cmd/monkeyc/main.go
+
+mvm:
+	go build -o mvm cmd/mvm/main.go

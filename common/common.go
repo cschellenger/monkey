@@ -1,11 +1,26 @@
 package common
 
 import (
+	"encoding/gob"
 	"fmt"
 
 	"github.com/antlr4-go/antlr/v4"
+	"github.com/cschellenger/monkey/object"
 	"github.com/cschellenger/monkey/parser"
 )
+
+const MONKEY_FACE = `            __,__
+   .--.  .-"     "-.  .--.
+  / .. \/  .-. .-.  \/ .. \
+ | |  '|  /   Y   \  |'  | |
+ | \   \  \ 0 | 0 /  /   / |
+  \ '- ,\.-"""""""-./, -' /
+   ''-' /_   ^ ^   _\ '-''
+       |  \._   _./  |
+       \   \ '~' /   /
+        '._ '-=-' _.'
+           '-----'
+`
 
 type InfixExpression interface {
 	Expression(i int) parser.IExpressionContext
@@ -34,4 +49,21 @@ func (mel *MonkeyErrListener) ReportAttemptingFullContext(recognizer antlr.Parse
 }
 func (mel *MonkeyErrListener) ReportContextSensitivity(recognizer antlr.Parser, dfa *antlr.DFA, startIndex, stopIndex, prediction int, configs *antlr.ATNConfigSet) {
 	//fmt.Printf("Got context sensitivity\n")
+}
+
+func RegisterGobTypes() {
+	gob.Register(&object.Integer{})
+	gob.Register(&object.Float{})
+	gob.Register(&object.Boolean{})
+	gob.Register(&object.String{})
+	gob.Register(&object.Null{})
+	gob.Register(&object.ReturnValue{})
+	gob.Register(&object.Error{})
+	gob.Register(&object.Function{})
+	gob.Register(&object.Builtin{})
+	gob.Register(&object.Array{})
+	gob.Register(&object.Hash{})
+	gob.Register(&object.HashPair{})
+	gob.Register(&object.CompiledFunction{})
+	gob.Register(&object.Closure{})
 }
